@@ -1,4 +1,4 @@
-# Note App
+# Memorii
 
 Aplicativo simples e minimalista de notas e checklist.
 
