@@ -13,3 +13,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         return user
+    
+from .models import Note
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ['id', 'title', 'content', 'completed', 'created_at']
