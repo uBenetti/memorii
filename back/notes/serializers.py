@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Note
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,8 +14,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         return user
-    
-from .models import Note
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
