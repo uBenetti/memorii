@@ -1,9 +1,7 @@
+import AppRoutes from "./routers/AppRouters";
+
 function App(){
-  return(
-    <div>
-      <h1>Memorii</h1>
-    </div>
-  )
+  return <AppRoutes />;
 }
 
-export default App
+export default App;
