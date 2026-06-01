@@ -1,18 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 
-export default function Dashboard(){
-    useEffect(() => {
-        const token = prompt("Cole seu Access Token");
+export default function Dashboard() {
+  const [username, setUsername] = useState("");
 
-        getProfile(token)
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error=>{
-                console.error(error);
-            });
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("access");
 
-    return <h1>Dashboard</h1>;
+    getProfile(token)
+      .then((data) => {
+        setUsername(data.username);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <h2>Olá, {username}</h2>
+    </div>
+  );
 }
