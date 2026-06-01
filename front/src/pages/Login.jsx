@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { login } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try{
@@ -11,7 +14,7 @@ export default function Login() {
 
             localStorage.setItem("access", data.access);
 
-            alert("Login realizado com sucesso!");
+            navigate("/dashboard");
         } catch (error){
             console.error(error);
             alert("Usuário ou senha inválidos");
