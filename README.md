@@ -105,7 +105,7 @@ memorii/
 ### 1. Clonar o Repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/uBenetti/memorii.git
 cd memorii
 ```
 
@@ -334,3 +334,8 @@ DELETE /api/notes/{id}/
 Estudante de Desenvolvimento de Software Multiplataforma - FATEC Itaquera.
 
 Projeto desenvolvido para fins acadêmicos e aprimoramento prático em desenvolvimento Full Stack com Django e React.
+
+---
+
+## Estado atual:
+**🚧 Em Desenvolvimento 🚧**
