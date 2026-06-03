@@ -1,5 +1,3 @@
-# Memorii
-
 <p align="center">
   <img src="assets/icon.svg" alt="Memorii" width="180">
 </p>
@@ -7,7 +5,7 @@
 <h1 align="center">Memorii</h1>
 
 <p align="center">
-  Sistema de gerenciamento de notas com autenticação JWT desenvolvido em Django e React.
+  Sistema de gerenciamento de anotações.
 </p>
 
 <p align="center">
@@ -16,6 +14,10 @@
   <img src="https://img.shields.io/badge/Vite-8-purple">
   <img src="https://img.shields.io/badge/JWT-Authentication-orange">
 </p>
+
+---
+
+# Memorii
 
 Sistema web de gerenciamento de notas desenvolvido como projeto acadêmico utilizando **Django REST Framework** no backend e **React + Vite** no frontend.
 
