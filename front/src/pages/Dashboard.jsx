@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
-import { getNotes } from "../services/noteService";
+import { getNotes, createNote } from "../services/noteService";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("");
   const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -26,11 +28,54 @@ export default function Dashboard() {
         })
   }, []);
 
+const handleCreateNote = async () => {
+  const token = localStorage.getItem("access");
+
+  try {
+    const newNote = await createNote(token, {
+      title,
+      content,
+      completed: false
+    });
+
+    setNotes([...notes, newNote]);
+
+    setTitle("");
+    setContent("");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
     <div>
       <h1>Dashboard</h1>
       <h2>Olá, {username}</h2>
 
+      <hr />
+      <h3>Nova Nota</h3>
+      <input type="text"
+        placeholder="Título"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <br />
+      <br />
+
+      <textarea
+        placeholder="Conteúdo"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+
+      <br />
+      <br />
+
+      <button onClick={handleCreateNote}>
+        Criar Nota
+      </button>
+      
       <hr />
 
       <h3>Minhas Notas</h3>
