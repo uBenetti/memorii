@@ -23,3 +23,10 @@ export const createNote = async (token, noteData) => {
     return response.data;
 };
 
+export const deleteNote = async (token, noteId) => {
+    await api.delete(`notes/${noteId}/`, {
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
+    });
+};

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
-import { getNotes, createNote } from "../services/noteService";
+import { getNotes, createNote, deleteNote } from "../services/noteService";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("");
@@ -47,6 +47,19 @@ const handleCreateNote = async () => {
   }
 };
 
+const handleDeleteNote = async (noteId) => {
+  const token = localStorage.getItem("access");
+
+  try{
+    await deleteNote(token, noteId);
+
+    setNotes(notes.filter(note => note.id !== noteId));
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -83,6 +96,10 @@ const handleCreateNote = async () => {
         <div key={note.id}>
           <h4>{note.title}</h4>
           <p>{note.content}</p>
+
+          <button onClick={() => handleDeleteNote(note.id)}>
+            Excluir
+          </button>
           <hr />
         </div>
       ))}
