@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 import { getNotes, createNote, deleteNote, updateNote } from "../services/noteService";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
@@ -102,10 +104,20 @@ const handleEditNote = (note) => {
   setContent(note.content);
 };
 
+const handleLogout = () => {
+  localStorage.removeItem("access");
+  localStorage.removeItem("refresh");
+
+  navigate("/");
+};
+
   return (
     <div>
       <h1>Dashboard</h1>
       <h2>Olá, {username}</h2>
+      <button onClick={handleLogout}>
+        Sair
+      </button>
 
       <hr />
       <h3>
