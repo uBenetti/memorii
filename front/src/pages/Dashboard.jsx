@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
-import { getNotes, createNote, deleteNote } from "../services/noteService";
+import { getNotes, createNote, deleteNote, updateNote } from "../services/noteService";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("");
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -32,16 +33,49 @@ const handleCreateNote = async () => {
   const token = localStorage.getItem("access");
 
   try {
-    const newNote = await createNote(token, {
-      title,
-      content,
-      completed: false
-    });
 
-    setNotes([...notes, newNote]);
+    if (editingId) {
+
+      const updatedNote = await updateNote(
+        token,
+        editingId,
+        {
+          title,
+          content,
+          completed: false
+        }
+      );
+
+      setNotes(
+        notes.map(note =>
+          note.id === editingId
+            ? updatedNote
+            : note
+        )
+      );
+
+      setEditingId(null);
+
+    } else {
+
+      const newNote = await createNote(
+        token,
+        {
+          title,
+          content,
+          completed: false
+        }
+      );
+
+      setNotes([
+        ...notes,
+        newNote
+      ]);
+    }
 
     setTitle("");
     setContent("");
+
   } catch (error) {
     console.error(error);
   }
@@ -60,13 +94,23 @@ const handleDeleteNote = async (noteId) => {
   }
 };
 
+const handleEditNote = (note) => {
+  setEditingId(note.id);
+
+  setTitle(note.title);
+
+  setContent(note.content);
+};
+
   return (
     <div>
       <h1>Dashboard</h1>
       <h2>Olá, {username}</h2>
 
       <hr />
-      <h3>Nova Nota</h3>
+      <h3>
+        {editingId ? "Editando Nota" : "Nova Nota"}
+      </h3>
       <input type="text"
         placeholder="Título"
         value={title}
@@ -86,9 +130,22 @@ const handleDeleteNote = async (noteId) => {
       <br />
 
       <button onClick={handleCreateNote}>
-        Criar Nota
+        {editingId ? "Editar Nota" : "Criar Nota"}
       </button>
       
+      {editingId && (
+        <button
+        onClick={() => {
+          setEditingId(null);
+          setTitle("");
+          setContent("");
+        }}
+        style={{ marginLeft: "10px" }}
+        >
+          Cancelar
+        </button>
+      )}
+
       <hr />
 
       <h3>Minhas Notas</h3>
@@ -99,6 +156,10 @@ const handleDeleteNote = async (noteId) => {
 
           <button onClick={() => handleDeleteNote(note.id)}>
             Excluir
+          </button>
+
+          <button onClick={() => handleEditNote(note)}>
+            Editar
           </button>
           <hr />
         </div>

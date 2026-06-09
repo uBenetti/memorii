@@ -30,3 +30,21 @@ export const deleteNote = async (token, noteId) => {
         }
     });
 };
+
+export const updateNote = async(
+    token,
+    noteId,
+    noteData
+) => {
+    const response = await api.put(
+        `notes/${noteId}/`,
+        noteData,
+        {
+            headers: {
+                Authorization:`Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+};
