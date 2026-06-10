@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 import { getNotes, createNote, deleteNote, updateNote } from "../services/noteService";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -113,13 +114,10 @@ const handleLogout = () => {
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      <h2>Olá, {username}</h2>
-      <button onClick={handleLogout}>
-        Sair
-      </button>
-
-      <hr />
+      <Header
+        username={username}
+        onLogout={handleLogout}
+      />
       <h3>
         {editingId ? "Editando Nota" : "Nova Nota"}
       </h3>
