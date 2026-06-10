@@ -3,6 +3,7 @@ import { getProfile } from "../services/authService";
 import { getNotes, createNote, deleteNote, updateNote } from "../services/noteService";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import NoteForm from "../components/NoteForm";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -105,6 +106,12 @@ const handleEditNote = (note) => {
   setContent(note.content);
 };
 
+const handleCancelEdit = () =>{
+  setEditingId(null);
+  setTitle("");
+  setContent("");
+}
+
 const handleLogout = () => {
   localStorage.removeItem("access");
   localStorage.removeItem("refresh");
@@ -118,45 +125,15 @@ const handleLogout = () => {
         username={username}
         onLogout={handleLogout}
       />
-      <h3>
-        {editingId ? "Editando Nota" : "Nova Nota"}
-      </h3>
-      <input type="text"
-        placeholder="Título"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+      <NoteForm
+        title={title}
+        setTitle={setTitle}
+        content={content}
+        setContent={setContent}
+        editingId={editingId}
+        onSubmit={handleCreateNote}
+        onCancel={handleCancelEdit}
       />
-
-      <br />
-      <br />
-
-      <textarea
-        placeholder="Conteúdo"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-
-      <br />
-      <br />
-
-      <button onClick={handleCreateNote}>
-        {editingId ? "Editar Nota" : "Criar Nota"}
-      </button>
-      
-      {editingId && (
-        <button
-        onClick={() => {
-          setEditingId(null);
-          setTitle("");
-          setContent("");
-        }}
-        style={{ marginLeft: "10px" }}
-        >
-          Cancelar
-        </button>
-      )}
-
-      <hr />
 
       <h3>Minhas Notas</h3>
       {notes.map((note) => (
