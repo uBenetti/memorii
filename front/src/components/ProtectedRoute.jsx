@@ -4,7 +4,15 @@ export default function ProtectedRoute({ children }){
     const token = localStorage.getItem("access");
 
     if (!token){
-        return <Navigate to="/"/>;
+        return (
+            <Navigate
+                to="/"
+                state={{
+                    message: "Você precisa estar logado para acessar esta página!"
+                }}
+                replace
+            />
+        );
     }
 
     return children;
