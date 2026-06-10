@@ -4,6 +4,7 @@ import { getNotes, createNote, deleteNote, updateNote } from "../services/noteSe
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import NoteForm from "../components/NoteForm";
+import NoteCard from "../components/NoteCard";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -136,20 +137,13 @@ const handleLogout = () => {
       />
 
       <h3>Minhas Notas</h3>
-      {notes.map((note) => (
-        <div key={note.id}>
-          <h4>{note.title}</h4>
-          <p>{note.content}</p>
-
-          <button onClick={() => handleDeleteNote(note.id)}>
-            Excluir
-          </button>
-
-          <button onClick={() => handleEditNote(note)}>
-            Editar
-          </button>
-          <hr />
-        </div>
+      {notes.map((note)=>(
+        <NoteCard
+          key={note.id}
+          note={note}
+          onDelete={handleDeleteNote}
+          onEdit={handleEditNote}
+        />
       ))}
     </div>
   );
