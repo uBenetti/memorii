@@ -16,6 +16,9 @@ media/
 .env
 .env.*
 
+# Migrações compiladas
+*.pyo
+
 # =========================
 # Node / React
 # =========================
@@ -24,6 +27,9 @@ node_modules/
 
 dist/
 build/
+
+# Vite
+.vite/
 
 # Logs
 npm-debug.log*
@@ -35,6 +41,9 @@ yarn-error.log*
 # =========================
 
 .vscode/
+
+# JetBrains
+.idea/
 
 # =========================
 # Sistema Operacional
@@ -50,3 +59,19 @@ Thumbs.db
 .pytest_cache/
 .mypy_cache/
 .coverage
+
+# Python cache
+*.egg-info/
+.eggs/
+
+# =========================
+# Coverage
+# =========================
+
+htmlcov/
+
+# =========================
+# Static gerados
+# =========================
+
+staticfiles/
