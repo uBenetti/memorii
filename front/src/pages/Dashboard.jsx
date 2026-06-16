@@ -1,43 +1,24 @@
-import { useEffect, useState } from "react";
-import { getNotes, createNote, deleteNote, updateNote } from "../services/noteService";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import NoteForm from "../components/NoteForm";
 import NoteCard from "../components/NoteCard";
 import useAuth from "../hooks/useAuth";
+import useNotes from "../hooks/useNotes";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [editingId, setEditingId] = useState(null);
-  const {
-    username,
-    logout
-  } = useAuth();
+  const { username, logout } = useAuth();
+  const {notes, createNewNote, deleteExistingNote, updateExistingNote} = useNotes();
 
-  useEffect(() => {
-    const token = localStorage.getItem("access");
 
-    getNotes(token)
-        .then((data) => {
-          setNotes(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-  }, []);
-
-const handleCreateNote = async () => {
-  const token = localStorage.getItem("access");
-
+  const handleCreateNote = async () => {
   try {
-
     if (editingId) {
-
-      const updatedNote = await updateNote(
-        token,
+      await updateExistingNote(
         editingId,
         {
           title,
@@ -46,31 +27,16 @@ const handleCreateNote = async () => {
         }
       );
 
-      setNotes(
-        notes.map(note =>
-          note.id === editingId
-            ? updatedNote
-            : note
-        )
-      );
-
       setEditingId(null);
 
     } else {
 
-      const newNote = await createNote(
-        token,
-        {
-          title,
-          content,
-          completed: false
-        }
-      );
+      await createNewNote({
+        title,
+        content,
+        completed: false
+      });
 
-      setNotes([
-        ...notes,
-        newNote
-      ]);
     }
 
     setTitle("");
@@ -82,13 +48,8 @@ const handleCreateNote = async () => {
 };
 
 const handleDeleteNote = async (noteId) => {
-  const token = localStorage.getItem("access");
-
-  try{
-    await deleteNote(token, noteId);
-
-    setNotes(notes.filter(note => note.id !== noteId));
-
+  try {
+    await deleteExistingNote(noteId);
   } catch (error) {
     console.error(error);
   }
