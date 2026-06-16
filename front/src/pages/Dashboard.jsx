@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react";
-import { getProfile } from "../services/authService";
 import { getNotes, createNote, deleteNote, updateNote } from "../services/noteService";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import NoteForm from "../components/NoteForm";
 import NoteCard from "../components/NoteCard";
+import useAuth from "../hooks/useAuth";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const {
+    username,
+    logout
+  } = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem("access");
 
-    getProfile(token)
-      .then((data) => {
-        setUsername(data.username);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-      getNotes(token)
+    getNotes(token)
         .then((data) => {
           setNotes(data);
         })
@@ -114,9 +109,7 @@ const handleCancelEdit = () =>{
 }
 
 const handleLogout = () => {
-  localStorage.removeItem("access");
-  localStorage.removeItem("refresh");
-
+  logout();
   navigate("/");
 };
 
