@@ -12,6 +12,9 @@ db.sqlite3
 
 media/
 
+back/db.sqlite3
+
+
 # Arquivos de ambiente
 .env
 .env.*
