@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note
+from .models import Note, ChecklistItem
+
+class ChecklistItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChecklistItem
+        fields = ['id', 'text', 'completed', 'order']
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,6 +21,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class NoteSerializer(serializers.ModelSerializer):
+    items = ChecklistItemSerializer(many=True, read_only=True)
+
     class Meta:
         model = Note
-        fields = ['id', 'title', 'content', 'completed', 'created_at']
+        fields = ['id', 'title', 'note_type', 'content', 'pinned', 'created_at', 'items']
+
+        read_only_fields = ['user', 'created_at']
