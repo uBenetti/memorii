@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import NoteForm from "../components/NoteForm";
-import NoteCard from "../components/NoteCard";
+import Header from "../components/layout/Header";
+import NoteForm from "../components/notes/NoteForm";
+import NotesGrid from "../components/notes/NotesGrid";
 import useAuth from "../hooks/useAuth";
 import useNotes from "../hooks/useNotes";
-import NotesGrid from "../components/notes/NotesGrid";
 
 export default function Dashboard() {
   const navigate = useNavigate();

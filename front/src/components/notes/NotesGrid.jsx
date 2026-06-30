@@ -1,3 +1,5 @@
+import NoteCard from "./NoteCard";
+
 export default function NotesGrid({
   notes,
   onDelete,
@@ -6,9 +8,12 @@ export default function NotesGrid({
   return (
     <div>
       {notes.map((note) => (
-        <div key={note.id}>
-          {/* Aqui ficará o NoteCard */}
-        </div>
+        <NoteCard
+            key={note.id}
+            note={note}
+            onDelete={onDelete}
+            onEdit={onEdit}
+        />
       ))}
     </div>
   );
