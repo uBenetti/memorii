@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
-import NoteForm from "../components/notes/NoteForm";
 import NotesGrid from "../components/notes/NotesGrid";
 import useAuth from "../hooks/useAuth";
 import useNotes from "../hooks/useNotes";
+import CreateNoteModal from "../components/notes/CreateNoteModal";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Dashboard() {
   const [editingId, setEditingId] = useState(null);
   const { username, logout } = useAuth();
   const {notes, createNewNote, deleteExistingNote, updateExistingNote} = useNotes();
-
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleCreateNote = async () => {
   try {
@@ -63,12 +63,6 @@ const handleEditNote = (note) => {
   setContent(note.content);
 };
 
-const handleCancelEdit = () =>{
-  setEditingId(null);
-  setTitle("");
-  setContent("");
-}
-
 const handleLogout = () => {
   logout();
   navigate("/");
@@ -80,21 +74,22 @@ const handleLogout = () => {
         username={username}
         onLogout={handleLogout}
       />
-      <NoteForm
-        title={title}
-        setTitle={setTitle}
-        content={content}
-        setContent={setContent}
-        editingId={editingId}
-        onSubmit={handleCreateNote}
-        onCancel={handleCancelEdit}
-      />
+
+      <div>
+        <button onClick={() => setShowCreateModal(true)}>
+          Criar Nova Nota
+        </button>
+      </div>
 
       <h3>Minhas Notas</h3>
         <NotesGrid
           notes={notes}
           onDelete={handleDeleteNote}
           onEdit={handleEditNote}
+        />
+        <CreateNoteModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
         />
     </div>
   );
