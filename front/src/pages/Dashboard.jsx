@@ -5,6 +5,7 @@ import NoteForm from "../components/NoteForm";
 import NoteCard from "../components/NoteCard";
 import useAuth from "../hooks/useAuth";
 import useNotes from "../hooks/useNotes";
+import NotesGrid from "../components/notes/NotesGrid";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -91,14 +92,11 @@ const handleLogout = () => {
       />
 
       <h3>Minhas Notas</h3>
-      {notes.map((note)=>(
-        <NoteCard
-          key={note.id}
-          note={note}
+        <NotesGrid
+          notes={notes}
           onDelete={handleDeleteNote}
           onEdit={handleEditNote}
         />
-      ))}
     </div>
   );
 }
