@@ -21,10 +21,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class NoteSerializer(serializers.ModelSerializer):
-    items = ChecklistItemSerializer(many=True, read_only=True)
+    items = ChecklistItemSerializer(many=True, required=False)
 
     class Meta:
         model = Note
         fields = ['id', 'title', 'note_type', 'content', 'pinned', 'created_at', 'items']
 
         read_only_fields = ['user', 'created_at']
+
+    def create(self, validated_data):
+        items_data = validated_data.pop('items', [])
+
+        note = Note.objects.create(**validated_data)
+
+        for index, item_data in enumerate(items_data):
+            ChecklistItem.objects.create(
+                note=note,
+                text=item_data['text'],
+                completed=item_data.get('completed', False),
+                order=index
+            )
+        return note

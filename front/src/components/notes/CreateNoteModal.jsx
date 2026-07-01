@@ -28,6 +28,20 @@ export default function CreateNoteModal({
         }
     };
 
+    const handleCreateChecklist = async (noteData) =>{
+        try{
+            await createNewNote({
+                title: noteData.title,
+                content: "",
+                note_type: "checklist",
+                pinned: false,
+                items: noteData.tasks
+            }); handleClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleClose = () => {
         setSelectedType("");
         setStep("choose");
@@ -61,7 +75,9 @@ export default function CreateNoteModal({
                 />
             )}
             {step === "checklist" && (
-                <ChecklistNoteForm />
+                <ChecklistNoteForm 
+                    onCreate={handleCreateChecklist}
+                />
             )}
 
             <button onClick={handleClose}>
