@@ -5,336 +5,354 @@
 <h1 align="center">Memorii</h1>
 
 <p align="center">
-  Sistema de gerenciamento de anotações.
+  Sistema inteligente de gerenciamento de notas e checklists.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Django-6.0-green">
+  <img src="https://img.shields.io/badge/Django-5.x-green">
+  <img src="https://img.shields.io/badge/Django_REST_Framework-API-red">
   <img src="https://img.shields.io/badge/React-19-blue">
-  <img src="https://img.shields.io/badge/Vite-8-purple">
+  <img src="https://img.shields.io/badge/Vite-7-purple">
   <img src="https://img.shields.io/badge/JWT-Authentication-orange">
+  <img src="https://img.shields.io/badge/Status-In_Development-yellow">
 </p>
 
 ---
 
 # Memorii
 
-Sistema web de gerenciamento de notas desenvolvido como projeto acadêmico utilizando **Django REST Framework** no backend e **React + Vite** no frontend.
+O **Memorii** é um sistema web de gerenciamento de notas desenvolvido como projeto acadêmico e de estudo, utilizando **Django REST Framework** no backend e **React + Vite** no frontend.
 
-O objetivo do projeto é permitir que usuários criem, visualizem, editem e excluam suas próprias anotações de forma segura através de autenticação JWT.
+Mais do que um simples CRUD de notas, o projeto está sendo construído para oferecer uma experiência moderna de organização pessoal, inspirada em aplicações como **Google Keep**, porém com funcionalidades próprias, como notas em formato de texto, checklists inteligentes, reorganização de tarefas e futuras integrações.
 
 ---
 
-## Tecnologias Utilizadas
+# Objetivos do Projeto
 
-### Backend
+O Memorii busca aplicar, em um único projeto, conceitos modernos de desenvolvimento Full Stack, incluindo:
+
+- Arquitetura Front-end baseada em componentes
+- Desenvolvimento de APIs REST
+- Autenticação JWT
+- Hooks personalizados no React
+- Organização escalável do código
+- Modelagem de banco de dados
+- Boas práticas de Git e GitHub
+- Preparação para deploy em produção
+
+---
+
+# Tecnologias Utilizadas
+
+## Backend
+
 - Python 3
 - Django
 - Django REST Framework
 - Simple JWT
 - SQLite (desenvolvimento)
-- CORS Headers
+- django-cors-headers
 
-### Frontend
-- React
+## Frontend
+
+- React 19
 - Vite
 - Axios
 - React Router DOM
+- React Hooks
 
-### Controle de Versão
+## Controle de versão
+
 - Git
 - GitHub
 
 ---
 
-## Funcionalidades Implementadas
+# Funcionalidades Implementadas
 
-### Autenticação
+## Sistema de autenticação
+
 - Cadastro de usuários
-- Login com JWT
-- Geração de Access Token
-- Geração de Refresh Token
-- Proteção de rotas da API
+- Login utilizando JWT
+- Access Token
+- Refresh Token
+- Rotas protegidas
 - Perfil autenticado
-
-### Notas
-- Criação de notas
-- Listagem de notas do usuário autenticado
-- Atualização de notas
-- Exclusão de notas
-- Isolamento de dados por usuário
-
-### Frontend
-- Navegação com React Router
-- Tela de Login
-- Integração com API Django
-- Armazenamento de token no Local Storage
-- Dashboard autenticado
-- Exibição do usuário logado
+- Logout
+- Login automático enquanto o token existir
 
 ---
 
-## Estrutura do Projeto
+## Sistema de notas
+
+### Notas de texto
+
+- Criar
+- Editar
+- Excluir
+- Listar
+
+### Notas Checklist
+
+- Criação de checklist
+- Criação dinâmica de tarefas
+- Armazenamento individual de cada tarefa
+- Associação das tarefas à nota
+- Estrutura preparada para marcação de tarefas concluídas
+
+---
+
+## Organização dos dados
+
+- Cada usuário possui acesso apenas às próprias notas.
+- Relação entre usuários e notas.
+- Relação entre notas e itens de checklist.
+- Estrutura preparada para fixação de notas.
+
+---
+
+## Frontend
+
+- React Router
+- Protected Routes
+- Dashboard autenticado
+- Componentização
+- Hooks personalizados
+- Grid de notas
+- Modal de criação de notas
+- Escolha do tipo de nota
+- Formulário específico para notas de texto
+- Formulário específico para checklists
+
+---
+
+# Estrutura Atual do Projeto
 
 ```text
 memorii/
-│
+
 ├── back/
+│
 │   ├── core/
 │   ├── notes/
+│   │
 │   ├── manage.py
-│   ├── requirements.txt
-│   └── db.sqlite3
+│   └── requirements.txt
 │
 ├── front/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── App.jsx
-│   │
-│   ├── package.json
-│   └── vite.config.js
 │
+│   ├── src/
+│   │
+│   ├── components/
+│   │
+│   │   ├── layout/
+│   │   │      Header.jsx
+│   │   │
+│   │   ├── notes/
+│   │   │      ChooseNoteType.jsx
+│   │   │      ChecklistNoteForm.jsx
+│   │   │      CreateNoteModal.jsx
+│   │   │      NoteCard.jsx
+│   │   │      NotesGrid.jsx
+│   │   │      TextNoteForm.jsx
+│   │   │
+│   │   └── ui/
+│   │          ProtectedRoute.jsx
+│   │
+│   ├── hooks/
+│   │      useAuth.jsx
+│   │      useNotes.jsx
+│   │
+│   ├── pages/
+│   ├── services/
+│   └── App.jsx
+│
+├── assets/
 ├── .gitignore
 └── README.md
 ```
 
 ---
 
-## Instalação do Projeto
+# API
 
-### 1. Clonar o Repositório
-
-```bash
-git clone https://github.com/uBenetti/memorii.git
-cd memorii
-```
-
----
-
-## Configuração do Backend
-
-### Acessar a pasta
-
-```bash
-cd back
-```
-
-### Criar ambiente virtual
-
-```bash
-python -m venv venv
-```
-
-### Ativar ambiente virtual
-
-Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-Linux/Mac:
-
-```bash
-source venv/bin/activate
-```
-
-### Instalar dependências
-
-```bash
-pip install -r requirements.txt
-```
-
-### Executar migrações
-
-```bash
-python manage.py migrate
-```
-
-### Iniciar servidor
-
-```bash
-python manage.py runserver
-```
-
-Servidor:
-
-```text
-http://127.0.0.1:8000
-```
-
----
-
-## Configuração do Frontend
-
-### Acessar a pasta
-
-```bash
-cd front
-```
-
-### Instalar dependências
-
-```bash
-npm install
-```
-
-### Iniciar aplicação
-
-```bash
-npm run dev
-```
-
-Frontend:
-
-```text
-http://localhost:5173
-```
-
----
-
-## Endpoints Disponíveis
+## Usuários
 
 ### Cadastro
 
-```http
+```
 POST /api/register/
 ```
 
-Exemplo:
-
-```json
-{
-  "username": "usuario",
-  "password": "123456"
-}
-```
-
----
-
 ### Login
 
-```http
+```
 POST /api/token/
 ```
 
-Exemplo:
-
-```json
-{
-  "username": "usuario",
-  "password": "123456"
-}
-```
-
-Resposta:
-
-```json
-{
-  "refresh": "token",
-  "access": "token"
-}
-```
-
----
-
 ### Perfil
 
-```http
+```
 GET /api/profile/
 ```
 
-Header:
-
-```http
-Authorization: Bearer <access_token>
-```
-
-Resposta:
-
-```json
-{
-  "username": "usuario"
-}
-```
-
 ---
 
-### Notas
+## Notas
 
-#### Listar Notas
+### Listar
 
-```http
+```
 GET /api/notes/
 ```
 
----
+### Criar
 
-#### Criar Nota
-
-```http
+```
 POST /api/notes/
 ```
 
-Exemplo:
+Exemplo (Texto)
 
 ```json
 {
-  "title": "Minha Nota",
-  "content": "Conteúdo da nota",
-  "completed": false
+    "title": "Minha Nota",
+    "note_type": "text",
+    "content": "Conteúdo",
+    "pinned": false
 }
 ```
 
----
+Exemplo (Checklist)
 
-#### Atualizar Nota
+```json
+{
+    "title": "Compras",
+    "note_type": "checklist",
+    "content": "",
+    "pinned": false,
+    "items": [
+        {
+            "text": "Leite"
+        },
+        {
+            "text": "Pão"
+        }
+    ]
+}
+```
 
-```http
+### Atualizar
+
+```
 PUT /api/notes/{id}/
 ```
 
----
+### Excluir
 
-#### Excluir Nota
-
-```http
+```
 DELETE /api/notes/{id}/
 ```
 
 ---
 
-## Segurança
+# Segurança
 
-- Autenticação baseada em JWT.
-- Endpoints protegidos por token.
-- Cada usuário acessa apenas suas próprias notas.
-- Tokens enviados através do cabeçalho Authorization.
-
----
-
-## Próximas Implementações
-
-- Interface completa para gerenciamento de notas.
-- Renovação automática de token.
-- Integração com PostgreSQL.
-- Deploy do backend.
-- Deploy do frontend.
-- Responsividade para dispositivos móveis.
+- JWT Authentication
+- Endpoints protegidos
+- Isolamento de dados por usuário
+- Proteção das rotas do frontend
+- Tokens enviados via Authorization Header
 
 ---
 
-## Autor
+# Arquitetura
+
+O projeto segue uma arquitetura baseada em componentes reutilizáveis.
+
+No frontend:
+
+- Layout Components
+- UI Components
+- Components específicos de Notes
+- Hooks personalizados
+- Services responsáveis pela comunicação com a API
+
+No backend:
+
+- Models
+- Serializers
+- Views
+- URLs
+- API REST
+
+---
+
+# Próximas Implementações
+
+## Checklists
+
+- Exibir tarefas na nota
+- Marcar tarefas como concluídas
+- Riscar tarefas concluídas
+- Reordenação das tarefas
+- Inserção de novas tarefas
+- Exclusão de tarefas
+
+## Organização
+
+- Fixar notas
+- Drag and Drop entre notas
+- Drag and Drop entre tarefas
+- Ordenação automática
+
+## Interface
+
+- Implementação completa do layout
+- Tema moderno inspirado no mockup
+- Responsividade
+- Animações
+- Dark Theme
+
+## Backend
+
+- Refresh Token automático
+- PostgreSQL
+- Deploy
+- Upload de imagens
+- Compartilhamento de notas (planejamento futuro)
+
+---
+
+# Status do Projeto
+
+## ✅ Concluído
+
+- Sistema de autenticação
+- CRUD completo de notas
+- CRUD preparado para checklist
+- Arquitetura por componentes
+- Hooks personalizados
+- Modal de criação
+- Dois tipos de nota
+- API REST funcional
+
+---
+
+## 🚧 Em desenvolvimento
+
+- Renderização de checklists
+- Interface final
+- Organização visual das notas
+- Drag and Drop
+- Sistema de tarefas concluídas
+
+---
+
+# Autor
 
 **Pedro Benetti**
 
-Estudante de Desenvolvimento de Software Multiplataforma - FATEC Itaquera.
+Estudante de Desenvolvimento de Software Multiplataforma — FATEC Itaquera.
 
-Projeto desenvolvido para fins acadêmicos e aprimoramento prático em desenvolvimento Full Stack com Django e React.
-
----
-
-## Estado atual:
-**🚧 Em Desenvolvimento 🚧**
+O Memorii é um projeto desenvolvido com foco no aprendizado de desenvolvimento Full Stack moderno utilizando Django REST Framework e React, aplicando conceitos de arquitetura de software, boas práticas de programação e desenvolvimento de aplicações escaláveis.
