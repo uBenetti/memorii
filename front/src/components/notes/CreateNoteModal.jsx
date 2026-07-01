@@ -1,22 +1,32 @@
+import { useState } from "react";
+import ChooseNoteType from "./ChooseNoteType";
+
 export default function CreateNoteModal({
     isOpen,
     onClose,
-}){
-    if(!isOpen){
+}) {
+
+    const [selectedType, setSelectedType] = useState("");
+
+    if (!isOpen) {
         return null;
     }
 
-    return(
+    return (
         <div>
-            <h2>Nova Nota</h2>
 
-            <p>
-                Formulário da nota vai aqui.
-            </p>
+            <ChooseNoteType
+                selectedType={selectedType}
+                onSelect={setSelectedType}
+                onContinue={() => {
+                    console.log(selectedType);
+                }}
+            />
 
             <button onClick={onClose}>
                 Fechar
             </button>
+
         </div>
     );
 }
