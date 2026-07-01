@@ -90,6 +90,7 @@ const handleLogout = () => {
         <CreateNoteModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
+          createNewNote={createNewNote}
         />
     </div>
   );

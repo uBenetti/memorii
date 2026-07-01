@@ -6,10 +6,27 @@ import ChecklistNoteForm from "./ChecklistNoteForm";
 export default function CreateNoteModal({
     isOpen,
     onClose,
+    createNewNote
 }) {
 
     const [selectedType, setSelectedType] = useState("");
     const [step, setStep] = useState("choose");
+
+    const handleCreateTextNote = async (noteData)=>{
+        try{
+            await createNewNote({
+                title: noteData.title,
+                content: noteData.content,
+                note_type: "text",
+                pinned: false
+            });
+
+            handleClose();
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleClose = () => {
         setSelectedType("");
@@ -23,7 +40,7 @@ export default function CreateNoteModal({
 
     return (
         <div>
-            {step == "choose" &&(
+            {step === "choose" &&(
             <ChooseNoteType
                 selectedType={selectedType}
                 onSelect={setSelectedType}
@@ -40,9 +57,7 @@ export default function CreateNoteModal({
             )}
             {step === "text" && (
                 <TextNoteForm 
-                    onCreate={(noteData) => {
-                        console.log(noteData);
-                    }}
+                    onCreate={handleCreateTextNote}
                 />
             )}
             {step === "checklist" && (

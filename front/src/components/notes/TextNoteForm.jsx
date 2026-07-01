@@ -6,6 +6,16 @@ export default function TextNoteForm({
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
+    const handleSubmit = async () =>{
+        await onCreate({
+            title,
+            content
+        });
+
+        setTitle("");
+        setContent("");
+    };
+
     return(
         <div>
             <h2>Nova Nota de Texto</h2>
@@ -28,13 +38,7 @@ export default function TextNoteForm({
             <br />
             <br />
 
-            <button
-                onClick={() => 
-                    onCreate({
-                        title,
-                        content
-                    })
-                }>
+            <button onClick={handleSubmit}>
                 Criar Nota
             </button>
         </div>
