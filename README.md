@@ -318,9 +318,6 @@ DELETE /api/notes/{id}/
 ## Próximas Implementações
 
 - Interface completa para gerenciamento de notas.
-- Cadastro de usuários pelo frontend.
-- Logout.
-- Proteção de rotas no React.
 - Renovação automática de token.
 - Integração com PostgreSQL.
 - Deploy do backend.
