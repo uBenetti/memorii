@@ -39,7 +39,11 @@ export default function CreateNoteModal({
             />
             )}
             {step === "text" && (
-                <TextNoteForm />
+                <TextNoteForm 
+                    onCreate={(noteData) => {
+                        console.log(noteData);
+                    }}
+                />
             )}
             {step === "checklist" && (
                 <ChecklistNoteForm />
