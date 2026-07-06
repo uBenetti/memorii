@@ -1,0 +1,26 @@
+{
+    "name": "Memorii",
+
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+
+    "postCreateCommand": "cd back && pip install -r requirements.txt && cd ../front && npm install",
+
+    "forwardPorts": [
+        5173,
+        8000
+    ],
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "bradlc.vscode-tailwindcss"
+            ]
+        }
+    }
+}
