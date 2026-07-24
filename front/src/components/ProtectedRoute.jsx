@@ -1,14 +1,22 @@
 import { Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 export default function ProtectedRoute({ children }){
-    const token = localStorage.getItem("access");
+    const {
+        isAuthenticated,
+        loading
+    } = useAuth();
 
-    if (!token){
-        return (
+    if (loading){
+        return <p>Autenticando...</p>
+    }
+
+    if(!isAuthenticated){
+        return(
             <Navigate
                 to="/"
                 state={{
-                    message: "Você precisa estar logado para acessar esta página!"
+                    message: "Você precisa estar logado."
                 }}
                 replace
             />
