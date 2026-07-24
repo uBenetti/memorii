@@ -5,47 +5,15 @@ import NotesGrid from "../components/notes/NotesGrid";
 import useAuth from "../hooks/useAuth";
 import useNotes from "../hooks/useNotes";
 import CreateNoteModal from "../components/notes/CreateNoteModal";
+import EditNoteModal from "../components/notes/EditingNoteModal";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [editingId, setEditingId] = useState(null);
   const { username, logout } = useAuth();
-  const {notes, createNewNote, deleteExistingNote, updateExistingNote} = useNotes();
+  const {notes, loading, createNewNote, deleteExistingNote, updateExistingNote} = useNotes();
   const [showCreateModal, setShowCreateModal] = useState(false);
-
-  const handleCreateNote = async () => {
-  try {
-    if (editingId) {
-      await updateExistingNote(
-        editingId,
-        {
-          title,
-          content,
-          completed: false
-        }
-      );
-
-      setEditingId(null);
-
-    } else {
-
-      await createNewNote({
-        title,
-        content,
-        completed: false
-      });
-
-    }
-
-    setTitle("");
-    setContent("");
-
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedNote, setSelectedNote] = useState(null);
 
 const handleDeleteNote = async (noteId) => {
   try {
@@ -56,11 +24,8 @@ const handleDeleteNote = async (noteId) => {
 };
 
 const handleEditNote = (note) => {
-  setEditingId(note.id);
-
-  setTitle(note.title);
-
-  setContent(note.content);
+  setSelectedNote(note);
+  setShowEditModal(true);
 };
 
 const handleLogout = () => {
@@ -79,19 +44,36 @@ const handleLogout = () => {
         <button onClick={() => setShowCreateModal(true)}>
           Criar Nova Nota
         </button>
-      </div>
 
-      <h3>Minhas Notas</h3>
-        <NotesGrid
-          notes={notes}
-          onDelete={handleDeleteNote}
-          onEdit={handleEditNote}
-        />
         <CreateNoteModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           createNewNote={createNewNote}
         />
+
+        <EditNoteModal
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedNote(null);
+          }}
+          note={selectedNote}
+          onUpdate={updateExistingNote}
+        />
+
+      </div>
+
+      <h3>Minhas Notas</h3>
+      
+      {loading ? (
+        <p>Carregando notas...</p>
+      ) : (
+        <NotesGrid
+          notes={notes}
+          onDelete={handleDeleteNote}
+          onEdit={handleEditNote}
+        />
+      )}
     </div>
   );
 }

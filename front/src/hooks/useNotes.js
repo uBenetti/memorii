@@ -6,16 +6,25 @@ import{
 
 export default function useNotes(){
     const [notes, setNotes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem("access");
 
+        if(!token){
+            setLoading(false);
+            return;
+        }
+
         getNotes(token)
             .then((data) => {
                 setNotes(data);
-            })
+             })
             .catch((error) => {
                 console.error(error);
+            })
+            .finally(()=>{
+                setLoading(false);
             });
     }, []);
 
@@ -77,6 +86,7 @@ const updateExistingNote = async (
 
 return {
   notes,
+  loading,
   createNewNote,
   deleteExistingNote,
   updateExistingNote
