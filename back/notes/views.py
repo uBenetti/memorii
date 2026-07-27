@@ -4,8 +4,8 @@ from .serializers import RegisterSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Note
-from .serializers import NoteSerializer
+from .models import Note, ChecklistItem
+from .serializers import (NoteSerializer, ChecklistItemSerializer)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -35,3 +35,14 @@ class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Note.objects.filter(user=self.request.user)
+
+class ChecklistItemDetailView(
+    generics.RetrieveUpdateDestroyAPIView
+):
+    serializer_class = ChecklistItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return ChecklistItem.objects.filter(
+            note_user=self.request.user
+        )
