@@ -44,5 +44,5 @@ class ChecklistItemDetailView(
 
     def get_queryset(self):
         return ChecklistItem.objects.filter(
-            note_user=self.request.user
+            note__user=self.request.user
         )

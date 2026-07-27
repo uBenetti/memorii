@@ -48,3 +48,21 @@ export const updateNote = async(
 
     return response.data;
 };
+
+export const updateChecklistItem = async (
+    token,
+    itemId,
+    itemData
+) => {
+    const response = await api.patch(
+        `checklist-items/${itemId}/`,
+        itemData,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+};

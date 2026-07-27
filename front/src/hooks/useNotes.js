@@ -1,30 +1,25 @@
 import { useEffect, useState } from "react";
 
-import{
-    getNotes, createNote, deleteNote, updateNote,
+import {
+    getNotes,
+    createNote,
+    deleteNote,
+    updateNote,
+    updateChecklistItem
 } from "../services/noteService";
 
-export default function useNotes(){
+export default function useNotes() {
     const [notes, setNotes] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem("access");
 
-        if(!token){
-            setLoading(false);
-            return;
-        }
-
         getNotes(token)
             .then((data) => {
                 setNotes(data);
-             })
+            })
             .catch((error) => {
                 console.error(error);
-            })
-            .finally(()=>{
-                setLoading(false);
             });
     }, []);
 
@@ -59,36 +54,71 @@ export default function useNotes(){
         );
     };
 
-const updateExistingNote = async (
-  noteId,
-  noteData
+    const updateExistingNote = async (
+        noteId,
+        noteData
+    ) => {
+        const token = localStorage.getItem("access");
+
+        const updatedNote = await updateNote(
+            token,
+            noteId,
+            noteData
+        );
+
+        setNotes((prev) =>
+            prev.map((note) =>
+                note.id === noteId
+                    ? updatedNote
+                    : note
+            )
+        );
+
+        return updatedNote;
+    };
+
+    const updateExistingChecklistItem = async (
+    itemId,
+    itemData
 ) => {
+    const token = localStorage.getItem("access");
 
-  const token = localStorage.getItem("access");
-
-  const updatedNote =
-    await updateNote(
-      token,
-      noteId,
-      noteData
+    const updatedItem = await updateChecklistItem(
+        token,
+        itemId,
+        itemData
     );
 
-  setNotes((prev) =>
-    prev.map((note) =>
-      note.id === noteId
-        ? updatedNote
-        : note
-    )
-  );
+    setNotes((prev) =>
+        prev.map((note) => {
+            const hasItem = note.items?.some(
+                (item) => item.id === itemId
+            );
 
-  return updatedNote;
+            if (!hasItem) {
+                return note;
+            }
+
+            return {
+                ...note,
+
+                items: note.items.map((item) =>
+                    item.id === itemId
+                        ? updatedItem
+                        : item
+                )
+            };
+        })
+    );
+
+    return updatedItem;
 };
 
-return {
-  notes,
-  loading,
-  createNewNote,
-  deleteExistingNote,
-  updateExistingNote
-};
+    return {
+        notes,
+        createNewNote,
+        deleteExistingNote,
+        updateExistingNote,
+        updateExistingChecklistItem
+    };
 }

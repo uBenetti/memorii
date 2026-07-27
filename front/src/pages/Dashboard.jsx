@@ -10,7 +10,7 @@ import EditNoteModal from "../components/notes/EditingNoteModal";
 export default function Dashboard() {
   const navigate = useNavigate();
   const { username, logout } = useAuth();
-  const {notes, loading, createNewNote, deleteExistingNote, updateExistingNote} = useNotes();
+  const {notes, loading, createNewNote, deleteExistingNote, updateExistingNote, updateExistingChecklistItem} = useNotes();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
@@ -72,6 +72,7 @@ const handleLogout = () => {
           notes={notes}
           onDelete={handleDeleteNote}
           onEdit={handleEditNote}
+          onUpdateItem={updateExistingChecklistItem}
         />
       )}
     </div>

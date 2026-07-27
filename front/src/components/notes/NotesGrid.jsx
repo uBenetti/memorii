@@ -3,7 +3,8 @@ import NoteCard from "./NoteCard";
 export default function NotesGrid({
   notes,
   onDelete,
-  onEdit
+  onEdit,
+  onUpdateItem
 }) {
   return (
     <div>
@@ -13,6 +14,7 @@ export default function NotesGrid({
             note={note}
             onDelete={onDelete}
             onEdit={onEdit}
+            onUpdateItem={onUpdateItem}
         />
       ))}
     </div>
