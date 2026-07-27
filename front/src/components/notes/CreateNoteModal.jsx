@@ -39,6 +39,8 @@ export default function CreateNoteModal({
             }); handleClose();
         } catch (error) {
             console.error(error);
+
+            throw error
         }
     };
 

@@ -28,10 +28,11 @@ export default function ChecklistNoteForm({
     };
 
     const handleSubmit = async () =>{
-    await onCreate({
-        title,
-        tasks
-    });
+        try {
+            await onCreate({
+            title,
+            tasks
+        });
 
     setTitle("");
     setTasks([
@@ -40,6 +41,9 @@ export default function ChecklistNoteForm({
             completed: false
         }
     ]);
+    } catch (error){
+        console.error(error);
+    }
     };
 
     return(
