@@ -59,11 +59,11 @@ export default function ChecklistNoteForm({
             <br />
             <br />
 
-            <h3>Tarefas</h3>
+            <h3>Itens</h3>
             {tasks.map((task, index) => (
                 <div key={index}>
                     <input
-                        placeholder={`Tarefa ${index + 1}`}
+                        placeholder={`Item ${index + 1}`}
                         value={task.text}
                         onChange={(e) => handleTaskChange(index, e.target.value)}
                     />
