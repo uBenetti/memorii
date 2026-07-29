@@ -36,7 +36,7 @@ class ChecklistItem(models.Model):
         related_name='items'
     )
 
-    text = models.CharField(max_length=300)
+    text = models.CharField(max_length=300, blank=True, default="")
 
     completed = models.BooleanField(default=False)
 

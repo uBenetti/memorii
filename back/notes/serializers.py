@@ -5,7 +5,7 @@ from .models import Note, ChecklistItem
 class ChecklistItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChecklistItem
-        fields = ['id', 'text', 'completed', 'order']
+        fields = ['id', "note", 'text', 'completed', 'order']
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,7 +27,7 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ['id', 'title', 'note_type', 'content', 'pinned', 'created_at', 'items']
 
-        read_only_fields = ['user', 'created_at']
+        read_only_fields = ["id"]
 
     def create(self, validated_data):
         items_data = validated_data.pop('items', [])

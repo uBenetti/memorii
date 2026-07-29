@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from django.contrib.auth.models import User
 from .serializers import RegisterSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -46,3 +46,20 @@ class ChecklistItemDetailView(
         return ChecklistItem.objects.filter(
             note__user=self.request.user
         )
+
+class ChecklistItemCreateView(generics.CreateAPIView):
+    serializer_class = ChecklistItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if not serializer.is_valid():
+            print(serializer.errors)   # <-- adicionamos isso
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

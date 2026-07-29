@@ -66,3 +66,21 @@ export const updateChecklistItem = async (
 
     return response.data;
 };
+
+export const createChecklistItem = async(token, noteId, order) => {
+    const response = await api.post(
+        "checklist-items/",{
+            note: noteId,
+            text: "",
+            completed: false,
+            order
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+};

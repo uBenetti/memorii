@@ -5,7 +5,8 @@ import {
     createNote,
     deleteNote,
     updateNote,
-    updateChecklistItem
+    updateChecklistItem,
+    createChecklistItem
 } from "../services/noteService";
 
 export default function useNotes() {
@@ -114,11 +115,38 @@ export default function useNotes() {
     return updatedItem;
 };
 
+const addChecklistItem = async (noteId) => {
+        const token = localStorage.getItem("access");
+
+        const note = notes.find(
+            (n) => n.id === noteId
+        );
+
+        const newItem = await createChecklistItem(
+            token, noteId, note.items.length
+        );
+
+    setNotes((prev) =>
+        prev.map((n) => {
+            if(n.id !== noteId)
+                return n;
+            return {
+                ...n,
+                items: [
+                    ...n.items,
+                    newItem
+                ]
+            };
+        })
+    );
+    };
+
     return {
         notes,
         createNewNote,
         deleteExistingNote,
         updateExistingNote,
-        updateExistingChecklistItem
+        updateExistingChecklistItem,
+        addChecklistItem
     };
 }

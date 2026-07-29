@@ -4,7 +4,8 @@ export default function NoteCard({
     note,
     onEdit,
     onDelete,
-    onUpdateItem
+    onUpdateItem,
+    onAddChecklistItem
 }) {
     return (
         <div>
@@ -23,6 +24,15 @@ export default function NoteCard({
                             onUpdate={onUpdateItem}
                         />
                     ))}
+
+                    <button
+                        onClick={() => {
+                            console.log("Botão clicado", note.id);
+                            onAddChecklistItem(note.id);
+                        }}
+                    >
+                        + Novo Item
+                    </button>
                 </div>
             )}
 
