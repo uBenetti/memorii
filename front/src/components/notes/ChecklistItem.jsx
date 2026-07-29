@@ -4,7 +4,7 @@ export default function ChecklistItem({
     item,
     onUpdate
 }) {
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(item.text === "");
     const [text, setText] = useState(item.text);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -27,12 +27,6 @@ export default function ChecklistItem({
     };
 
     const handleSave = async () => {
-        if (text.trim() === "") {
-            setText(item.text);
-            setIsEditing(false);
-            return;
-        }
-
         if (text === item.text) {
             setIsEditing(false);
             return;
@@ -48,10 +42,7 @@ export default function ChecklistItem({
             setIsEditing(false);
 
         } catch (error) {
-            console.error(
-                "Erro ao salvar texto:",
-                error
-            );
+            console.error(error);
 
             setText(item.text);
 
@@ -101,10 +92,12 @@ export default function ChecklistItem({
                             ? "line-through"
                             : "none",
 
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        color: item.text ? "inherit" : "#888",
+                        fontStyle: item.text ? "normal" : "italic"
                     }}
                 >
-                    {item.text}
+                    {item.text || "Novo item..."}
                 </span>
             )}
         </div>
