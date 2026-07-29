@@ -84,3 +84,13 @@ export const createChecklistItem = async(token, noteId, order) => {
 
     return response.data;
 };
+
+export const deleteChecklistItem = async(token, itemId) =>{
+    await api.delete(
+        `checklist-items/${itemId}/`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+};

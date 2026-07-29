@@ -5,7 +5,8 @@ export default function NoteCard({
     onEdit,
     onDelete,
     onUpdateItem,
-    onAddChecklistItem
+    onAddChecklistItem,
+    onDeleteItem
 }) {
     return (
         <div>
@@ -22,6 +23,7 @@ export default function NoteCard({
                             key={item.id}
                             item={item}
                             onUpdate={onUpdateItem}
+                            onDelete={onDeleteItem}
                         />
                     ))}
 

@@ -2,8 +2,11 @@ import { useState } from "react";
 
 export default function ChecklistItem({
     item,
-    onUpdate
+    onUpdate,
+    onDelete
 }) {
+    console.log("ChecklistItem props:", {item, onDelete});
+
     const [isEditing, setIsEditing] = useState(item.text === "");
     const [text, setText] = useState(item.text);
     const [isSaving, setIsSaving] = useState(false);
@@ -83,23 +86,18 @@ export default function ChecklistItem({
                     disabled={isSaving}
                 />
             ) : (
-                <span
-                    onClick={() => {
-                        setIsEditing(true);
-                    }}
-                    style={{
-                        textDecoration: item.completed
-                            ? "line-through"
-                            : "none",
-
-                        cursor: "pointer",
-                        color: item.text ? "inherit" : "#888",
-                        fontStyle: item.text ? "normal" : "italic"
-                    }}
-                >
-                    {item.text || "Novo item..."}
-                </span>
+                <input
+                    value={text}
+                    placeholder="Novo item..."
+                    onChange={(e) => setText(e.target.value)}
+                    onBlur={handleSave}
+                    onKeyDown={handleKeyDown}
+                /> 
             )}
+
+            <button onClick={() => onDelete(item.id)}>
+                🗑️
+            </button>
         </div>
     );
 }

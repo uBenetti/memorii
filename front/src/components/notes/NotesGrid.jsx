@@ -5,7 +5,8 @@ export default function NotesGrid({
   onDelete,
   onEdit,
   onUpdateItem,
-  onAddChecklistItem
+  onAddChecklistItem,
+  onDeleteChecklistItem
 }) {
   return (
     <div>
@@ -17,6 +18,7 @@ export default function NotesGrid({
             onEdit={onEdit}
             onUpdateItem={onUpdateItem}
             onAddChecklistItem={onAddChecklistItem}
+            onDeleteItem={onDeleteChecklistItem}
         />
       ))}
     </div>
