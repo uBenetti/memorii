@@ -6,6 +6,7 @@ class ChecklistItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChecklistItem
         fields = ['id', "note", 'text', 'completed', 'order']
+        read_only_fields=['id', 'note']
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
