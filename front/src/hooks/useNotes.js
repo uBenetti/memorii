@@ -153,23 +153,22 @@ const addChecklistItem = async (noteId) => {
 
     const removeChecklistItem = async (itemId) => {
 
-    const token = localStorage.getItem("access");
+        const token = localStorage.getItem("access");
 
-    await deleteChecklistItem(
-        token,
-        itemId
-    );
+            await deleteChecklistItem(
+                token,
+                itemId
+            );
 
-    setNotes((prev) =>
-        prev.map((note) => ({
-            ...note,
-            items: note.items.filter(
-                (item) => item.id !== itemId
-            )
-        }))
-    );
-
-};
+            setNotes((prev) =>
+                prev.map((note) => ({
+                    ...note,
+                    items: note.items?.filter(
+                        (item) => item.id !== itemId
+                    )
+                }))
+        );
+    };
 
     return {
         notes,
