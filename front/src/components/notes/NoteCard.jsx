@@ -13,7 +13,9 @@ export default function NoteCard({
             <h4>{note.title}</h4>
 
             {note.note_type === "text" && (
-                <p>{note.content}</p>
+                <p style={{whiteSpace: "pre-wrap" }}>
+                    {note.content}
+                </p>
             )}
 
             {note.note_type === "checklist" && (

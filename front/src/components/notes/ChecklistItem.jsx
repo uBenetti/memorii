@@ -5,9 +5,6 @@ export default function ChecklistItem({
     onUpdate,
     onDelete
 }) {
-    console.log("ChecklistItem props:", {item, onDelete});
-
-    const [isEditing, setIsEditing] = useState(item.text === "");
     const [text, setText] = useState(item.text);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -31,7 +28,6 @@ export default function ChecklistItem({
 
     const handleSave = async () => {
         if (text === item.text) {
-            setIsEditing(false);
             return;
         }
 
@@ -39,13 +35,14 @@ export default function ChecklistItem({
             setIsSaving(true);
 
             await onUpdate(item.id, {
-                text: text.trim()
+                text: text
             });
 
-            setIsEditing(false);
-
         } catch (error) {
-            console.error(error);
+            console.error(
+                "Erro ao salvar texto:",
+                error
+            );
 
             setText(item.text);
 
@@ -56,17 +53,23 @@ export default function ChecklistItem({
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
-            handleSave();
+            event.currentTarget.blur();
         }
 
         if (event.key === "Escape") {
             setText(item.text);
-            setIsEditing(false);
+            event.currentTarget.blur();
         }
     };
 
     return (
-        <div>
+        <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px"
+            }}
+        >
             <input
                 type="checkbox"
                 checked={item.completed}
@@ -74,30 +77,35 @@ export default function ChecklistItem({
                 disabled={isSaving}
             />
 
-            {isEditing ? (
-                <input
-                    value={text}
-                    onChange={(event) => {
-                        setText(event.target.value);
-                    }}
-                    onBlur={handleSave}
-                    onKeyDown={handleKeyDown}
-                    autoFocus
-                    disabled={isSaving}
-                />
-            ) : (
-                <input
-                    value={text}
-                    placeholder="Novo item..."
-                    onChange={(e) => setText(e.target.value)}
-                    onBlur={handleSave}
-                    onKeyDown={handleKeyDown}
-                /> 
-            )}
+            <input
+                value={text}
+                placeholder=""
+                onChange={(event) => {
+                    setText(event.target.value);
+                }}
+                onBlur={handleSave}
+                onKeyDown={handleKeyDown}
+                disabled={isSaving}
+                style={{
+                    border: "none",
+                    outline: "none",
+                    background: "transparent",
+                    padding: 0,
+                    margin: 0,
+                    font: "inherit",
+                    textDecoration: item.completed
+                        ? "line-through"
+                        : "none"
+                }}
+            />
 
-            <button onClick={() => onDelete(item.id)}>
-                🗑️
-            </button>
+            {onDelete && (
+                <button
+                    onClick={() => onDelete(item.id)}
+                >
+                    🗑️
+                </button>
+            )}
         </div>
     );
 }
