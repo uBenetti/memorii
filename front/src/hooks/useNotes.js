@@ -123,23 +123,32 @@ const addChecklistItem = async (noteId) => {
             (n) => n.id === noteId
         );
 
+        if(!note){
+            console.error("Nota não encontrada: ", noteId);
+            return;
+        }
+
+        const items = note.items || [];
+
         const newItem = await createChecklistItem(
-            token, noteId, note.items.length
+            token, noteId, items.length
         );
 
-    setNotes((prev) =>
-        prev.map((n) => {
-            if(n.id !== noteId)
-                return n;
-            return {
-                ...n,
-                items: [
-                    ...n.items,
-                    newItem
-                ]
-            };
-        })
-    );
+        setNotes((prev) =>
+            prev.map((n) => {
+                if(n.id !== noteId)
+                    return n;
+                return {
+                    ...n,
+                    items: [
+                        ...(n.items || []),
+                        newItem
+                    ]
+                };
+            })
+        );
+
+        return newItem;
     };
 
     const removeChecklistItem = async (itemId) => {

@@ -73,7 +73,7 @@ export const createChecklistItem = async(token, noteId, order) => {
             note: noteId,
             text: "",
             completed: false,
-            order
+            order   
         },
         {
             headers: {

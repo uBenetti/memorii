@@ -51,15 +51,13 @@ class ChecklistItemCreateView(generics.CreateAPIView):
     serializer_class = ChecklistItemSerializer
     permission_classes = [IsAuthenticated]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+    def perform_create(self, serializer):
+        note=serializer.validated_data["note"]
 
-        if not serializer.is_valid():
-            print(serializer.errors)   # <-- adicionamos isso
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+        if note.user != self.request.user:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied(
+                "Você não pode adicionar itens a esta nota."
             )
 
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
