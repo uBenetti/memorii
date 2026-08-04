@@ -3,13 +3,15 @@ from rest_framework import serializers
 from .models import Note, ChecklistItem
 
 class ChecklistItemSerializer(serializers.ModelSerializer):
-    note=serializers.PrimaryKeyRelatedField(
-        queryset=Note.objects.all()
-    )
-
     class Meta:
         model = ChecklistItem
-        fields = ['id', "note", 'text', 'completed', 'order']
+        fields = ['id', 'text', 'completed', 'order']
+
+class ChecklistItemCreateSerializer(serializers.ModelSerializer):
+    note=serializers.PrimaryKeyRelatedField(queryset=Note.objects.all())
+    class Meta:
+        model = ChecklistItem
+        fields = ['id', 'text', 'completed', 'order', 'note']
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:

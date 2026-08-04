@@ -28,6 +28,9 @@ export default function useNotes() {
     const createNewNote = async (noteData) => {
         const token = localStorage.getItem("access");
 
+        console.log("Token:", token);
+        console.log("Dados:", noteData);
+
         const newNote = await createNote(
             token,
             noteData

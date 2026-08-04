@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Note, ChecklistItem
-from .serializers import (NoteSerializer, ChecklistItemSerializer)
+from .serializers import (NoteSerializer, ChecklistItemSerializer, ChecklistItemCreateSerializer)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -26,8 +26,27 @@ class NoteListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Note.objects.filter(user=self.request.user)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def create(self, request, *args, **kwargs):
+        print("REQUEST DATA:")
+        print(request.data)
+
+        serializer = self.get_serializer(data=request.data)
+
+        print("VALID:", serializer.is_valid())
+        print("ERRORS:", serializer.errors)
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer.save(user=request.user)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
 
 class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NoteSerializer
@@ -48,7 +67,7 @@ class ChecklistItemDetailView(
         )
 
 class ChecklistItemCreateView(generics.CreateAPIView):
-    serializer_class = ChecklistItemSerializer
+    serializer_class = ChecklistItemCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
