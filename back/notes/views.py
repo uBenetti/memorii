@@ -26,27 +26,8 @@ class NoteListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Note.objects.filter(user=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        print("REQUEST DATA:")
-        print(request.data)
-
-        serializer = self.get_serializer(data=request.data)
-
-        print("VALID:", serializer.is_valid())
-        print("ERRORS:", serializer.errors)
-
-        if not serializer.is_valid():
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        serializer.save(user=request.user)
-
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NoteSerializer
