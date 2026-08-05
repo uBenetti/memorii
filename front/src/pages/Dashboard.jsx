@@ -42,7 +42,7 @@ const handleLogout = () => {
 
       <div>
         <button onClick={() => setShowCreateModal(true)}>
-          Criar Nova Nota
+          Nova Anotação
         </button>
 
         <CreateNoteModal
