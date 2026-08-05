@@ -35,7 +35,6 @@ export default function Login() {
                 placeholder="Usuário..."
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                style={{ fontStyle: 'italic' }}
             />
 
             <br />
