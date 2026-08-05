@@ -32,9 +32,10 @@ export default function Login() {
 
             <input 
                 type="text"
-                placeholder="Usuário"
+                placeholder="Usuário..."
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                style={{ fontStyle: 'italic' }}
             />
 
             <br />
@@ -42,7 +43,7 @@ export default function Login() {
             
             <input 
                 type="password"
-                placeholder="Senha"
+                placeholder="Senha..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
