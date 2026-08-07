@@ -1,0 +1,7 @@
+.login-input{
+    font-style: normal;
+}
+
+.login-input::placeholder{
+    font-style: italic;
+}
