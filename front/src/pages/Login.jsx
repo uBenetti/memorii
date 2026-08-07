@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { login } from "../services/authService";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./Login.css";
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -24,13 +25,14 @@ export default function Login() {
     };
 
     return(
-        <div>
+        <div className="login-container">
             <h1>Login</h1>
             {location.state?.message && (
                 <p>{location.state.message}</p>
             )}
 
             <input 
+                className="login-input"
                 type="text"
                 placeholder="Usuário..."
                 value={username}
@@ -41,6 +43,7 @@ export default function Login() {
             <br />
             
             <input 
+                className="login-input"
                 type="password"
                 placeholder="Senha..."
                 value={password}
