@@ -24,10 +24,26 @@ class NoteListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Note.objects.filter(user=self.request.user)
+        return Note.objects.filter(user=self.request.user).order_by("order")
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        last_note=(
+            Note.objects
+            .filter(user=self.request.user)
+            .order_by("-order")
+            .first()
+        )
+
+        next_order =(
+            last_note.order + 1
+            if last_note
+            else 0
+        )
+
+        serializer.save(
+            user=self.request.user,
+            order=next_order
+        )
 
 class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NoteSerializer

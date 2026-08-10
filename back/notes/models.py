@@ -24,6 +24,8 @@ class Note(models.Model):
 
     pinned = models.BooleanField(default=False)
 
+    order = models.PositiveIntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
