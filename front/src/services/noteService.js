@@ -94,3 +94,21 @@ export const deleteChecklistItem = async(token, itemId) =>{
         }
     );
 };
+
+export const updateNotePin = async (
+    token, noteId, pinned
+) => {
+    const response = await api.patch(
+        `notes/${noteId}/`,
+        {
+            pinned
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+};
