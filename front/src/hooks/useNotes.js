@@ -5,6 +5,7 @@ import {
     createNote,
     deleteNote,
     updateNote,
+    updateNotePin,
     updateChecklistItem,
     createChecklistItem,
     deleteChecklistItem
@@ -168,6 +169,26 @@ const addChecklistItem = async (noteId) => {
                     )
                 }))
         );
+    };
+
+    const toggleNotePin = async (noteId, pinned) => {
+    const token = localStorage.getItem("access");
+
+    const updatedNote = await updateNotePin(
+        token,
+        noteId,
+        pinned
+        );
+
+        setNotes((currentNotes) =>
+            currentNotes.map((note) =>
+                note.id === noteId
+                    ? updatedNote
+                    : note
+            )
+        );
+
+        return updatedNote;
     };
 
     return {
