@@ -33,7 +33,7 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ['id', 'title', 'note_type', 'content', 'pinned', 'order', 'created_at', 'items']
 
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "order"]
 
     def create(self, validated_data):
         items_data = validated_data.pop('items', [])

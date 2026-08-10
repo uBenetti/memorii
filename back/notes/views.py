@@ -24,7 +24,7 @@ class NoteListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Note.objects.filter(user=self.request.user).order_by("order")
+        return Note.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         last_note=(
@@ -39,6 +39,8 @@ class NoteListCreateView(generics.ListCreateAPIView):
             if last_note
             else 0
         )
+
+        print(f"Ordem gerada:  {next_order}")
 
         serializer.save(
             user=self.request.user,
