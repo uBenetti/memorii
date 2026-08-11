@@ -1,3 +1,6 @@
+[🇧🇷 Portuguese/Português](README-PT.md)
+
+
 <p align="center">
   <img src="assets/icon.svg" alt="Memorii" width="180">
 </p>
