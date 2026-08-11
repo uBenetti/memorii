@@ -4,11 +4,10 @@
 <p align="center">
   <img src="assets/icon.svg" alt="Memorii" width="180">
 </p>
-
 <h1 align="center">Memorii</h1>
 
 <p align="center">
-  Sistema inteligente de gerenciamento de notas e checklists.
+  Intelligent system for managing notes and checklists.
 </p>
 
 <p align="center">
@@ -24,35 +23,35 @@
 
 # Memorii
 
-O **Memorii** é um sistema web de gerenciamento de notas desenvolvido como projeto acadêmico e de estudo, utilizando **Django REST Framework** no backend e **React + Vite** no frontend.
+**Memorii** is a web-based note management system developed as an academic and learning project, utilizing **Django REST Framework** for the backend and **React + Vite** for the frontend.
 
-O projeto está sendo construído com foco em uma experiência moderna de organização pessoal, inspirado em aplicações como o **Google Keep**, mas com uma arquitetura própria e preparada para futuras funcionalidades.
+The project is being built with a focus on a modern personal organization experience; it is inspired by applications like **Google Keep** but features a custom architecture designed to support future functionality.
 
-Atualmente, o sistema permite o gerenciamento de notas de texto e checklists, com autenticação baseada em JWT e isolamento dos dados entre usuários.
-
----
-
-# Objetivos do Projeto
-
-O Memorii busca aplicar, em um único projeto, conceitos modernos de desenvolvimento Full Stack, incluindo:
-
-- Desenvolvimento de APIs REST
-- Autenticação baseada em JWT
-- Desenvolvimento de interfaces com React
-- Arquitetura baseada em componentes
-- Criação de Hooks personalizados
-- Separação de responsabilidades
-- Modelagem de banco de dados
-- Relacionamento entre entidades
-- Gerenciamento de estado no frontend
-- Boas práticas de Git e GitHub
-- Desenvolvimento em ambiente local e GitHub Codespaces
-- Preparação para deploy em produção
-- Construção de uma arquitetura escalável
+Currently, the system supports the management of text notes and checklists, featuring JWT-based authentication and data isolation between users.
 
 ---
 
-# Tecnologias Utilizadas
+# Project Objectives
+
+Memorii aims to apply modern Full Stack development concepts within a single project, including:
+
+- REST API development
+- JWT-based authentication
+- UI development with React
+- Component-based architecture
+- Creation of custom hooks
+- Separation of concerns
+- Database modeling
+- Entity relationships
+- Frontend state management
+- Git and GitHub best practices
+- Development in local environments and GitHub Codespaces
+- Preparation for production deployment
+- Building a scalable architecture
+
+---
+
+# Technologies Used
 
 ## Backend
 
@@ -60,7 +59,7 @@ O Memorii busca aplicar, em um único projeto, conceitos modernos de desenvolvim
 - Django 6
 - Django REST Framework
 - Simple JWT
-- SQLite (desenvolvimento)
+- SQLite (development)
 - django-cors-headers
 
 ## Frontend
@@ -71,7 +70,7 @@ O Memorii busca aplicar, em um único projeto, conceitos modernos de desenvolvim
 - React Router DOM
 - React Hooks
 
-## Controle de versão
+## Version controler
 
 - Git
 - GitHub
@@ -79,59 +78,59 @@ O Memorii busca aplicar, em um único projeto, conceitos modernos de desenvolvim
 
 ---
 
-# Funcionalidades Implementadas
+# Implemented Features
 
-## Sistema de autenticação
+## Authentication System
 
-O sistema utiliza autenticação baseada em **JSON Web Tokens (JWT)**.
+The system uses **JSON Web Token (JWT)**-based authentication.
 
-Atualmente, o fluxo de autenticação inclui:
+Currently, the authentication flow includes:
 
-- Cadastro de usuários
-- Login utilizando JWT
-- Geração de Access Token
-- Geração de Refresh Token
-- Armazenamento do Access Token no Local Storage
-- Proteção das rotas do frontend
-- Verificação do perfil autenticado
-- Validação real do token através da API
-- Persistência da sessão após recarregar a página
+- User registration
+- Login using JWT
+- Access Token generation
+- Refresh Token generation
+- Access Token storage in Local Storage
+- Frontend route protection
+- Authenticated profile verification
+- Token validation via the API
+- Session persistence after page reload
 - Logout
-- Remoção de tokens inválidos ou expirados
+- Removal of invalid or expired tokens
 
 ---
 
-## Sistema de notas
+## Note system
 
-### Notas de texto
+### Text notes
 
-#### As notas de texto possuem:
-- Título
-- Conteúdo
-- Tipo da nota
-- Status de fixação
-- Data de criação
+#### Text notes have:
+- Title
+- Content
+- Note type
+- Pin status
+- Creation date
 
-#### Operações disponíveis:
-- Criar
-- Listar
-- Editar
-- Excluir
+#### Available operations:
+- Create
+- List
+- Edit
+- Delete
 
-### Notas Checklist
+### Checklist Notes
 
-#### Uma checklist é composta por:
-- Título
-- Listar tarefas
-- Status de conclusão de cada item
-- Ordem das tarefas
+#### A checklist consists of:
+- Title
+- List of tasks
+- Completion status for each item
+- Task order
 
 ---
 
-## Organização dos dados
+## Data organization
 
-O sistema possui isolamento de dados por usuário.
-Cada nota possui um usuário responsável:
+The system features data isolation by user.
+Each note has a responsible user:
 
 ```
 User
@@ -147,26 +146,26 @@ User
             └── ChecklistItem
 ```
 
-O backend utiliza o usuário autenticado através do JWT para garantir que cada usuário acesse apenas suas próprias notas.
+The backend uses the user authenticated via JWT to ensure that each user accesses only their own notes.
 
 ---
 
 ## Frontend
 
 - React Router
-- Protected Routes
-- Dashboard autenticado
-- Componentização
-- Hooks personalizados
-- Grid de notas
-- Modal de criação de notas
-- Escolha do tipo de nota
-- Formulário específico para notas de texto
-- Formulário específico para checklists
+- Protected routes
+- Authenticated dashboard
+- Componentization
+- Custom hooks
+- Note grid
+- Note creation modal
+- Note type selection
+- Specific form for text notes
+- Specific form for checklists
 
 ---
 
-# Estrutura Atual do Projeto
+# Current Project Structure
 
 ```text
 memorii/
@@ -246,9 +245,9 @@ memorii/
 
 # API
 
-## Usuários
+## Users
 
-### Cadastro
+### Register
 
 ```
 POST /api/register/
@@ -260,13 +259,13 @@ POST /api/register/
 POST /api/token/
 ```
 
-### Perfil
+### Profile
 
 ```
 GET /api/profile/
 ```
 
-### Renovação do token
+### Token renewal
 
 ```
 POST /api/token/refresh/
@@ -274,59 +273,59 @@ POST /api/token/refresh/
 
 ---
 
-## Notas
+## Notes
 
-### Listar
+### List
 
 ```
 GET /api/notes/
 ```
 
-### Criar
+### Create
 
 ```
 POST /api/notes/
 ```
 
-Exemplo (Texto)
+Example (Text)
 
 ```json
 {
-    "title": "Minha Nota",
+    "title": "My Note",
     "note_type": "text",
-    "content": "Conteúdo da nota",
+    "content": "note content",
     "pinned": false
 }
 ```
 
-Exemplo (Checklist)
+Example (Checklist)
 
 ```json
 {
-    "title": "Lista de Compras",
+    "title": "Shopping List",
     "note_type": "checklist",
     "content": "",
     "pinned": false,
     "items": [
         {
-            "text": "Leite",
+            "text": "Milk",
             "completed": false
         },
         {
-            "text": "Pão",
+            "text": "Bread",
             "completed": false
         }
     ]
 }
 ```
 
-### Atualizar
+### Update
 
 ```
 PUT /api/notes/{id}/
 ```
 
-### Excluir
+### Exclude
 
 ```
 DELETE /api/notes/{id}/
@@ -334,27 +333,27 @@ DELETE /api/notes/{id}/
 
 ---
 
-# Segurança
+# Security
 
-- Autenticação JWT
-- Endpoints protegidos
-- Authorization Header
-- Rotas protegidas no React
-- Validação do token através da API
-- Remoção automática de tokens inválidos
-- Isolamento de dados por usuário
+- JWT authentication
+- Protected endpoints
+- Authorization header
+- Protected routes in React
+- Token validation via API
+- Automatic removal of invalid tokens
+- Data isolation by user
 
 ---
 
-# Arquitetura
+# Architecture
 
-O projeto segue uma arquitetura baseada na separação de responsabilidades.
+The project follows an architecture based on the separation of concerns.
 
 ## Frontend
 
 ### Components
 
-Responsáveis pela interface visual
+Responsible for the visual interface
 
 ```text
 Header
@@ -366,7 +365,7 @@ EditNoteModal
 
 ### Hooks
 
-Responsáveis pela lógica reutilizável.
+Responsible for reusable logic.
 
 ```text
 useAuth
@@ -375,7 +374,7 @@ useNotes
 
 ### Services
 
-Responsáveis pela comunicação com a API.
+Responsible for communication with the API.
 
 ```text
 authService
@@ -384,11 +383,12 @@ noteService
 
 ### Protected Routes
 
-Responsáveis por impedir o acesso de usuários não autenticados.
+Responsible for preventing access by unauthenticated users.
 
 ## Backend
 
-A API utiliza a arquitetura tradicional do Django REST Framework:
+The API uses the traditional Django REST Framework architecture:
+
 ```text 
   Models
     ↓
@@ -403,158 +403,160 @@ Serializers
 
 ---
 
-# Desenvolvimento em GitHub Codespaces
+# Development in GitHub Codespaces
 
-O projeto também está preparado para desenvolvimento através do GitHub Codespaces.
+The project is also set up for development using GitHub Codespaces.
 
-Essa configuração permite continuar o desenvolvimento em computadores com limitações de instalação de software, como ambientes escolares.
+This configuration allows development to continue on computers with software installation restrictions, such as in school environments.
 
-O Codespace permite executar:
+The Codespace allows you to run:
+
 ```text
 Backend Django
         +
 Frontend React/Vite
 ```
-em um ambiente virtualizado na nuvem.
+in a virtualized cloud environment.
 
-Isso permite acessar o projeto a partir de diferentes computadores sem precisar instalar localmente todas as ferramentas de desenvolvimento.
+This allows you to access the project from different computers without needing to install all the development tools locally.
 
 ---
 
-# Próximas Implementações
+# Upcoming Implementations
 
 ## Checklists
 
-- Exibir tarefas diretamente no NoteCard
-- Marcar tarefas como concluídas
-- Riscar tarefas concluídas
-- Atualizar o estado de cada tarefa
-- Reordenar tarefas
-- Inserir novas tarefas durante a edição
-- Excluir tarefas individualmente
+- Display tasks directly on the NoteCard
+- Mark tasks as completed
+- Cross out completed tasks
+- Update the status of each task
+- Reorder tasks
+- Add new tasks while editing
+- Delete tasks individually
 
-## Organização
+## Organization
 
-- Fixar notas
-- Filtrar notas fixadas
-- Pesquisa de notas
-- Drag and Drop entre notas
-- Drag and Drop entre tarefas
-- Ordenação automática
-- Organização por categorias
+- Pin notes
+- Filter pinned notes
+- Note search
+- Drag and drop between notes
+- Drag and drop between tasks
+- Automatic sorting
+- Organization by category
 
 ## Interface
 
-- Implementação completa do layout visual
-- Interface moderna inspirada no conceito inicial do Memorii
-- Responsividade
-- Animações
+- Full implementation of the visual layout
+- Modern interface inspired by the initial Memorii concept
+- Responsiveness
+- Animations
 - Dark Theme
-- Melhorias nos modais
-- Feedback visual para ações
-- Estados vazios
-- Estados de erro
+- Modal improvements
+- Visual feedback for actions
+- Empty states
+- Error states
 
-## Autenticação
+## Authentication
 
-- Renovação automática do Access Token utilizando o Refresh Token
-- Expiração de sessão
-- Melhor gerenciamento global da autenticação
-- Centralização do estado de autenticação através de Context API
+- Automatic Access Token renewal using the Refresh Token
+- Session expiration
+- Improved global authentication management
+- Centralization of authentication state via Context API
 
 ## Backend
 
-- Migração de SQLite para PostgreSQL
-- Deploy do backend
-- Upload de imagens
-- Anexos
-- Compartilhamento de notas
-- Sistema de permissões
-- Melhorias na validação dos dados
+- Migration from SQLite to PostgreSQL
+- Backend deployment
+- Image upload
+- Attachments
+- Note sharing
+- Permissions system
+- Data validation improvements
 
 ---
 
-# Status do Projeto
+# Project Status
 
-## ✅ Concluído
+## ✅ Completed
 
-- Estrutura inicial do projeto
-- Backend Django
-- API REST
-- Cadastro de usuários
-- Login com JWT
-- Access Token
-- Refresh Token
-- Perfil autenticado
-- Rotas protegidas
+- Initial project structure
+- Django backend
+- REST API
+- User registration
+- JWT login
+- Access token
+- Refresh token
+- Authenticated profile
+- Protected routes
 - Logout
-- Validação real do token
-- Persistência da autenticação
-- Remoção de tokens inválidos
-- CRUD de notas
-- Notas de texto
-- Estrutura de checklists
-- ChecklistItems
-- Associação entre notas e tarefas
-- Isolamento de dados por usuário
-- Hooks personalizados
+- Token validation
+- Authentication persistence
+- Removal of invalid tokens
+- Note CRUD
+- Text notes
+- Checklist structure
+- Checklist items
+- Association between notes and tasks
+- Data isolation by user
+- Custom hooks
 - useAuth
 - useNotes
-- Serviços de API
-- Dashboard autenticado
-- Grid de notas
-- Cards de notas
-- Modal de criação
-- Escolha do tipo de nota
-- Formulário de nota de texto
-- Formulário de checklist
-- Modal independente de edição
-- Exclusão de notas
-- Estado de carregamento das notas
-- Separação entre criação e edição de notas
-- Configuração para desenvolvimento através do GitHub Codespaces
+- API services
+- Authenticated dashboard
+- Notes grid
+- Note cards
+- Creation modal
+- Note type selection
+- Text note form
+- Checklist form
+- Standalone edit modal
+- Note deletion
+- Note loading state
+- Separation of note creation and editing
+- Development setup via GitHub Codespaces
+- Marking tasks as complete
+- Visual organization of notes
+- Empty states
+- Automatic JWT renewal
+
 
 ---
 
-## Em desenvolvimento:
+## Under development:
 
-- Renderização visual completa das checklists
-- Marcação de tarefas concluídas
-- Interface final
-- Organização visual das notas
-- Estados vazios
-- Estados de erro
-- Sistema de fixação de notas
-- Drag and Drop
-- Sistema de pesquisa
-- Dark Theme
-- Responsividade
-- Renovação automática do JWT
+- Full visual rendering of checklists
+- Final interface
+- Error states
+- Note pinning system
+- Drag-and-drop
+- Search system
+- Dark theme
+- Responsiveness
 
 ---
 
-# Autor
+# Author
 
 **Pedro Benetti**
 
-Estudante de Desenvolvimento de Software Multiplatform — FATEC Itaquera.
+Multiplatform Software Development student — FATEC Itaquera.
 
-O Memorii é um projeto desenvolvido com foco no aprendizado prático de desenvolvimento Full Stack moderno utilizando Django REST Framework e React.
+Memorii is a project developed with a focus on hands-on learning of modern Full Stack development using Django REST Framework and React.
 
-O projeto aplica conceitos de:
-- Desenvolvimento de APIs REST
-- Autenticação e segurança
-- Arquitetura de software
-- Componentização
-- Gerenciamento de estado
-- Modelagem de dados
-- Boas práticas de Git e GitHub
-- Desenvolvimento de aplicações escaláveis
+The project applies concepts such as:
+- REST API development
+- Authentication and security
+- Software architecture
+- Componentization
+- State management
+- Data modeling
+- Git and GitHub best practices
+- Scalable application development
 
 ---
 
-# Estado Atual
+# Current Status
 
-## 🚧 Em desenvolvimento ativo. 🚧
+## 🚧 Under active development. 🚧
 
-O projeto continua evoluindo progressivamente, com foco na construção de uma aplicação completa de organização pessoal baseada em notas, checklists e futuras funcionalidades de produtividade.
+The project continues to evolve steadily, focusing on building a comprehensive personal organization application based on notes, checklists, and future productivity features.

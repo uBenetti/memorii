@@ -512,6 +512,10 @@ Isso permite acessar o projeto a partir de diferentes computadores sem precisar 
 - Estado de carregamento das notas
 - Separação entre criação e edição de notas
 - Configuração para desenvolvimento através do GitHub Codespaces
+- Marcação de tarefas concluídas
+- Organização visual das notas
+- Estados vazios
+- Renovação automática do JWT
 
 ---
 
