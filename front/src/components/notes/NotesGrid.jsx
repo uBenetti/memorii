@@ -9,9 +9,13 @@ export default function NotesGrid({
     onDeleteChecklistItem,
     onTogglePin
 }) {
-    const orderedNotes = [...notes].sort(
-        (a, b) => a.order - b.order
-    );
+    const orderedNotes = [...notes].sort((a,b) => {
+        if (a.pinned !== b.pinned) {
+            return b.pinned - a.pinned
+        }
+
+        return a.order - b.order;
+    });
 
     return (
         <div
