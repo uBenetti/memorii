@@ -172,12 +172,12 @@ const addChecklistItem = async (noteId) => {
     };
 
     const toggleNotePin = async (noteId, pinned) => {
-    const token = localStorage.getItem("access");
+        const token = localStorage.getItem("access");
 
-    const updatedNote = await updateNotePin(
-        token,
-        noteId,
-        pinned
+        const updatedNote = await updateNotePin(
+            token,
+            noteId,
+            pinned
         );
 
         setNotes((currentNotes) =>
@@ -198,6 +198,7 @@ const addChecklistItem = async (noteId) => {
         updateExistingNote,
         updateExistingChecklistItem,
         addChecklistItem,
-        removeChecklistItem
+        removeChecklistItem,
+        toggleNotePin
     };
 }

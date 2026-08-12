@@ -6,7 +6,8 @@ export default function NotesGrid({
     onEdit,
     onUpdateItem,
     onAddChecklistItem,
-    onDeleteChecklistItem
+    onDeleteChecklistItem,
+    onTogglePin
 }) {
     const orderedNotes = [...notes].sort(
         (a, b) => a.order - b.order
@@ -30,6 +31,7 @@ export default function NotesGrid({
                     onUpdateItem={onUpdateItem}
                     onAddChecklistItem={onAddChecklistItem}
                     onDeleteItem={onDeleteChecklistItem}
+                    onTogglePin={onTogglePin}
                 />
             ))}
         </div>

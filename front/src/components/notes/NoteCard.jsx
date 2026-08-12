@@ -6,12 +6,21 @@ export default function NoteCard({
     onDelete,
     onUpdateItem,
     onDeleteItem,
-    onAddChecklistItem
+    onAddChecklistItem,
+    onTogglePin
 }) {
     return (
         <div>
-            <h4>{note.title}</h4>
+            <div>
+                <h4>{note.title}</h4>
 
+                <button
+                    onClick={()=>onTogglePin(note.id, !note.pinned)}
+                    title={note.pinned ? "Desfixar nota" : "Fixar nota"}
+                >
+                    {note.pinned ? "📍" : "📌"}
+                </button>
+            </div>
             {note.note_type === "text" && (
                 <p style={{whiteSpace: "pre-wrap" }}>
                     {note.content}
