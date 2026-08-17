@@ -8,7 +8,8 @@ import {
     updateNotePin,
     updateChecklistItem,
     createChecklistItem,
-    deleteChecklistItem
+    deleteChecklistItem,
+    reaorderNote
 } from "../services/noteService";
 
 export default function useNotes() {
@@ -191,6 +192,30 @@ const addChecklistItem = async (noteId) => {
         return updatedNote;
     };
 
+    const reorderExistingNote = async (
+        noteId,
+        newOrder
+    ) => {
+        const token = localStorage.getItem("access");
+
+        const updatedData = await reorderNote(
+            token,
+            noteId,
+            newOrder
+        );
+
+        setNotes((currentNotes) =>
+            currentNotes.map((note) =>
+                note.id === noteId
+                    ? {
+                        ...note,
+                        order: updatedData.order
+                    }
+                    : note
+            )
+        );
+    };
+
     return {
         notes,
         createNewNote,
@@ -199,6 +224,7 @@ const addChecklistItem = async (noteId) => {
         updateExistingChecklistItem,
         addChecklistItem,
         removeChecklistItem,
-        toggleNotePin
+        toggleNotePin,
+        reorderExistingNote
     };
 }

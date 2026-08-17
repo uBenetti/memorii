@@ -112,3 +112,18 @@ export const updateNotePin = async (
 
     return response.data;
 };
+
+export const reaorderNote = async (token, noteId, order) =>{
+    const response = await api.patch(
+        `notes/${noteId}/reorder`,{
+            order
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+};

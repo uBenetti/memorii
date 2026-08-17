@@ -19,7 +19,8 @@ export default function Dashboard() {
     updateExistingChecklistItem,
     addChecklistItem,
     removeChecklistItem,
-    toggleNotePin
+    toggleNotePin,
+    reorderExistingNote
   } = useNotes();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -86,6 +87,7 @@ const handleLogout = () => {
           onAddChecklistItem={addChecklistItem}
           onDeleteChecklistItem={removeChecklistItem}
           onTogglePin={toggleNotePin}
+          onReorder={reorderExistingNote}
         />
       )}
     </div>

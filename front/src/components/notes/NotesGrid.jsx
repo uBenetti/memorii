@@ -7,7 +7,8 @@ export default function NotesGrid({
     onUpdateItem,
     onAddChecklistItem,
     onDeleteChecklistItem,
-    onTogglePin
+    onTogglePin,
+    onReorder
 }) {
     const orderedNotes = [...notes].sort((a,b) => {
         if (a.pinned !== b.pinned) {
