@@ -81,37 +81,37 @@ class ChecklistItemCreateView(generics.CreateAPIView):
         serializer.save()
 
 class NoteReorderView(APIView):
-    permission_classes = [isAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request, pk):
         try:
-            note = Note.object.get(
-                pk=pk
+            note = Note.objects.get(
+                pk=pk,
                 user=request.user
             )
-        except Note.DoesNoteExist:
+        except Note.DoesNotExist:
             return Response(
-                {"detail": "Nota não encontrada."}
-                status=status.HTTP_404_NOTE_FOUND
+                {"detail": "Nota não encontrada."},
+                status=status.HTTP_404_NOT_FOUND
             )
 
         new_order = request.data.get("order")
 
         if new_order is None:
             return Response(
-                {"detail": "O campo order é obrgatório."},
+                {"detail": "O campo order é obrigatório."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         try:
             new_order = int(new_order)
-        except (TryError, ValueError):
+        except (TypeError, ValueError):
             return Response(
-                {"detail": "O campo order deve ser um número."}
+                {"detail": "O campo order deve ser um número."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        note.order=new_order
+        note.order = new_order
         note.save(update_fields=["order"])
 
         return Response({
