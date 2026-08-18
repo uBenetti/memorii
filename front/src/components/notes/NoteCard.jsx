@@ -10,6 +10,7 @@ export default function NoteCard({
     onTogglePin,
     onReorder
 }) {
+
     const handleDragStart = (event) => {
         event.dataTransfer.setData(
             "noteId",
@@ -28,7 +29,7 @@ export default function NoteCard({
             event.dataTransfer.getData("noteId")
         );
 
-        if (draggedNoteId === note.id){
+        if (draggedNoteId === note.id) {
             return;
         }
 
@@ -46,14 +47,24 @@ export default function NoteCard({
                 <h4>{note.title}</h4>
 
                 <button
-                    onClick={()=>onTogglePin(note.id, !note.pinned)}
-                    title={note.pinned ? "Desfixar nota" : "Fixar nota"}
+                    onClick={() =>
+                        onTogglePin(
+                            note.id,
+                            !note.pinned
+                        )
+                    }
+                    title={
+                        note.pinned
+                            ? "Desfixar nota"
+                            : "Fixar nota"
+                    }
                 >
                     {note.pinned ? "📍" : "📌"}
                 </button>
             </div>
+
             {note.note_type === "text" && (
-                <p style={{whiteSpace: "pre-wrap" }}>
+                <p style={{ whiteSpace: "pre-wrap" }}>
                     {note.content}
                 </p>
             )}
@@ -70,7 +81,9 @@ export default function NoteCard({
                     ))}
 
                     <button
-                        onClick={() => onAddChecklistItem(note.id)}
+                        onClick={() =>
+                            onAddChecklistItem(note.id)
+                        }
                     >
                         +
                     </button>
