@@ -7,10 +7,41 @@ export default function NoteCard({
     onUpdateItem,
     onDeleteItem,
     onAddChecklistItem,
-    onTogglePin
+    onTogglePin,
+    onReorder
 }) {
+    const handleDragStart = (event) => {
+        event.dataTransfer.setData(
+            "noteId",
+            note.id.toString()
+        );
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+
+        const draggedNoteId = Number(
+            event.dataTransfer.getData("noteId")
+        );
+
+        if (draggedNoteId === note.id){
+            return;
+        }
+
+        onReorder(draggedNoteId, note.id);
+    };
+
     return (
-        <div>
+        <div
+            draggable
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+        >
             <div>
                 <h4>{note.title}</h4>
 

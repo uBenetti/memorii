@@ -37,6 +37,7 @@ export default function NotesGrid({
                     onAddChecklistItem={onAddChecklistItem}
                     onDeleteItem={onDeleteChecklistItem}
                     onTogglePin={onTogglePin}
+                    onReorder={onReorder}
                 />
             ))}
         </div>
