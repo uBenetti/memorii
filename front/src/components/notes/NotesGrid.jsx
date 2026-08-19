@@ -10,19 +10,22 @@ export default function NotesGrid({
     onTogglePin,
     onReorder
 }) {
-    const orderedNotes = [...notes].sort((a,b) => {
-        if (a.pinned !== b.pinned) {
-            return b.pinned - a.pinned
-        }
+    const orderedNotes = [...notes].sort(
+        (a, b) => {
+            if (a.pinned !== b.pinned) {
+                return b.pinned - a.pinned;
+            }
 
-        return a.order - b.order;
-    });
+            return a.order - b.order;
+        }
+    );
 
     return (
         <div
             style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
+                gridTemplateColumns:
+                    "repeat(4, 1fr)",
                 gap: "16px",
                 alignItems: "start"
             }}
@@ -34,8 +37,12 @@ export default function NotesGrid({
                     onDelete={onDelete}
                     onEdit={onEdit}
                     onUpdateItem={onUpdateItem}
-                    onAddChecklistItem={onAddChecklistItem}
-                    onDeleteItem={onDeleteChecklistItem}
+                    onAddChecklistItem={
+                        onAddChecklistItem
+                    }
+                    onDeleteItem={
+                        onDeleteChecklistItem
+                    }
                     onTogglePin={onTogglePin}
                     onReorder={onReorder}
                 />

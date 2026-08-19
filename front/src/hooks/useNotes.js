@@ -6,10 +6,10 @@ import {
     deleteNote,
     updateNote,
     updateNotePin,
+    reorderNote,
     updateChecklistItem,
     createChecklistItem,
-    deleteChecklistItem,
-    reaorderNote
+    deleteChecklistItem
 } from "../services/noteService";
 
 export default function useNotes() {
@@ -193,26 +193,59 @@ const addChecklistItem = async (noteId) => {
     };
 
     const reorderExistingNote = async (
-        noteId,
-        newOrder
+        draggedNoteId,
+        targetNoteId
     ) => {
         const token = localStorage.getItem("access");
 
-        const updatedData = await reorderNote(
-            token,
-            noteId,
-            newOrder
+        const draggedIndex = notes.findIndex(
+            (note) => note.id === draggedNoteId
         );
 
-        setNotes((currentNotes) =>
-            currentNotes.map((note) =>
-                note.id === noteId
-                    ? {
+        const targetIndex = notes.findIndex(
+            (note) => note.id === targetNoteId
+        );
+
+        if (
+            draggedIndex === -1 ||
+            targetIndex === -1
+        ) {
+            return;
+        }
+
+        const draggedNote = notes[draggedIndex];
+        const targetNote = notes[targetIndex];
+
+        await reorderNote(
+            token,
+            draggedNote.id,
+            targetNote.order
+        );
+
+        await reorderNote(
+            token,
+            targetNote.id,
+            draggedNote.order
+        );
+
+        setNotes((prev) =>
+            prev.map((note) => {
+                if (note.id === draggedNote.id) {
+                    return {
                         ...note,
-                        order: updatedData.order
-                    }
-                    : note
-            )
+                        order: targetNote.order
+                    };
+                }
+
+                if (note.id === targetNote.id) {
+                    return {
+                        ...note,
+                        order: draggedNote.order
+                    };
+                }
+
+                return note;
+            })
         );
     };
 
