@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from django.db import transaction
 from django.contrib.auth.models import User
 from .serializers import RegisterSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -83,38 +84,41 @@ class ChecklistItemCreateView(generics.CreateAPIView):
 class NoteReorderView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request, pk):
-        try:
-            note = Note.objects.get(
-                pk=pk,
+    @transaction.atomic
+    def patch(self, request):
+        ordered_ids = request.data.get("ordered_ids")
+
+        if not isinstace(ordered_ids, list):
+            return Response(
+                {
+                    "detail": "ordered_ids deve ser uma lista."
+                },
+                status = status.HTTP_400_BAD_REQUEST
+            )
+        
+        user_notes = Note.objects.filter(
+            user=request.user
+        )
+
+        user_notes_ids = set(ordered_ids)
+
+        if received_ids != user_note_ids:
+            return Response(
+                {
+                    "detail":"A lista de notas enviada é inválida."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        for order, note_id in enumarate(ordered_ids):
+            Note.objects.filter(
+                id=note_id,
                 user=request.user
+            ).update(
+                order=order
             )
-        except Note.DoesNotExist:
-            return Response(
-                {"detail": "Nota não encontrada."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        new_order = request.data.get("order")
-
-        if new_order is None:
-            return Response(
-                {"detail": "O campo order é obrigatório."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            new_order = int(new_order)
-        except (TypeError, ValueError):
-            return Response(
-                {"detail": "O campo order deve ser um número."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        note.order = new_order
-        note.save(update_fields=["order"])
-
-        return Response({
-            "id": note.id,
-            "order": note.order
-        })
+        return Response(
+            {
+                "detail": "Notas reordenadas com sucesso."
+            },
+            status=status.HTTP_200_OK
+        )

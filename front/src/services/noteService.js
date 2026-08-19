@@ -13,8 +13,9 @@ export const getNotes = async (token) => {
 export const createNote = async (token, noteData) => {
     const response = await api.post(
         "notes/",
-        noteData,{
-            headers:{
+        noteData,
+        {
+            headers: {
                 Authorization: `Bearer ${token}`
             }
         }
@@ -25,13 +26,13 @@ export const createNote = async (token, noteData) => {
 
 export const deleteNote = async (token, noteId) => {
     await api.delete(`notes/${noteId}/`, {
-        headers:{
+        headers: {
             Authorization: `Bearer ${token}`
         }
     });
 };
 
-export const updateNote = async(
+export const updateNote = async (
     token,
     noteId,
     noteData
@@ -41,7 +42,7 @@ export const updateNote = async(
         noteData,
         {
             headers: {
-                Authorization:`Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         }
     );
@@ -67,13 +68,18 @@ export const updateChecklistItem = async (
     return response.data;
 };
 
-export const createChecklistItem = async(token, noteId, order) => {
+export const createChecklistItem = async (
+    token,
+    noteId,
+    order
+) => {
     const response = await api.post(
-        "checklist-items/",{
+        "checklist-items/",
+        {
             note: noteId,
             text: "",
             completed: false,
-            order   
+            order
         },
         {
             headers: {
@@ -85,9 +91,13 @@ export const createChecklistItem = async(token, noteId, order) => {
     return response.data;
 };
 
-export const deleteChecklistItem = async(token, itemId) =>{
+export const deleteChecklistItem = async (
+    token,
+    itemId
+) => {
     await api.delete(
-        `checklist-items/${itemId}/`,{
+        `checklist-items/${itemId}/`,
+        {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -96,7 +106,9 @@ export const deleteChecklistItem = async(token, itemId) =>{
 };
 
 export const updateNotePin = async (
-    token, noteId, pinned
+    token,
+    noteId,
+    pinned
 ) => {
     const response = await api.patch(
         `notes/${noteId}/`,
@@ -113,15 +125,14 @@ export const updateNotePin = async (
     return response.data;
 };
 
-export const reorderNote = async (
+export const reorderNotes = async (
     token,
-    noteId,
-    order
+    orderedIds
 ) => {
     const response = await api.patch(
-        `notes/${noteId}/reorder/`,
+        "notes/reorder/",
         {
-            order
+            ordered_ids: orderedIds
         },
         {
             headers: {

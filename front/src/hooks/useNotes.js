@@ -6,7 +6,7 @@ import {
     deleteNote,
     updateNote,
     updateNotePin,
-    reorderNote,
+    reorderNotes,
     updateChecklistItem,
     createChecklistItem,
     deleteChecklistItem
@@ -198,11 +198,41 @@ const addChecklistItem = async (noteId) => {
     ) => {
         const token = localStorage.getItem("access");
 
-        const draggedIndex = notes.findIndex(
+        const pinnedNotes = [...notes]
+            .filter((note) => note.pinned)
+            .sort((a, b) => a.order - b.order);
+
+        const unpinnedNotes = [...notes]
+            .filter((note) => !note.pinned)
+            .sort((a, b) => a.order - b.order);
+
+        const draggedNote = notes.find(
             (note) => note.id === draggedNoteId
         );
 
-        const targetIndex = notes.findIndex(
+        const targetNote = notes.find(
+            (note) => note.id === targetNoteId
+        );
+
+        if (!draggedNote || !targetNote) {
+            return;
+        }
+
+        // Não permite mover uma nota entre
+        // a área de fixadas e não fixadas.
+        if (draggedNote.pinned !== targetNote.pinned) {
+            return;
+        }
+
+        const currentList = draggedNote.pinned
+            ? pinnedNotes
+            : unpinnedNotes;
+
+        const draggedIndex = currentList.findIndex(
+            (note) => note.id === draggedNoteId
+        );
+
+        const targetIndex = currentList.findIndex(
             (note) => note.id === targetNoteId
         );
 
@@ -213,40 +243,52 @@ const addChecklistItem = async (noteId) => {
             return;
         }
 
-        const draggedNote = notes[draggedIndex];
-        const targetNote = notes[targetIndex];
+        const reorderedList = [...currentList];
 
-        await reorderNote(
-            token,
-            draggedNote.id,
-            targetNote.order
+        const [removedNote] = reorderedList.splice(
+            draggedIndex,
+            1
         );
 
-        await reorderNote(
-            token,
-            targetNote.id,
-            draggedNote.order
+        reorderedList.splice(
+            targetIndex,
+            0,
+            removedNote
         );
 
-        setNotes((prev) =>
-            prev.map((note) => {
-                if (note.id === draggedNote.id) {
-                    return {
-                        ...note,
-                        order: targetNote.order
-                    };
-                }
-
-                if (note.id === targetNote.id) {
-                    return {
-                        ...note,
-                        order: draggedNote.order
-                    };
-                }
-
-                return note;
+        const updates = reorderedList.map(
+            (note, index) => ({
+                id: note.id,
+                order: index
             })
         );
+
+        // Atualização visual imediata
+        setNotes((prev) =>
+            prev.map((note) => {
+                const update = updates.find(
+                    (item) => item.id === note.id
+                );
+
+                if (!update) {
+                    return note;
+                }
+
+                return {
+                    ...note,
+                    order: update.order
+                };
+            })
+        );
+
+        // Persiste a nova ordem no Django
+        for (const update of updates) {
+            await reorderNotes(
+                token,
+                update.id,
+                update.order
+            );
+        }
     };
 
     return {

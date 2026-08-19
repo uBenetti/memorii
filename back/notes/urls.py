@@ -16,10 +16,20 @@ urlpatterns = [
 
     path("notes/", NoteListCreateView.as_view()),
     path("notes/<int:pk>/", NoteDetailView.as_view()),
-    path("notes/<int:pk>/reorder/", NoteReorderView.as_view()),
 
-    path("checklist-items/", ChecklistItemCreateView.as_view()),
-    path("checklist-items/<int:pk>/", ChecklistItemDetailView.as_view()),
+    path(
+        "notes/reorder/",
+        NoteReorderView.as_view(),
+        name="note-reorder"
+    ),
 
-    path("notes/<int:pk>/reorder", NoteReorderView.as_view(), name="note-reorder"),
+    path(
+        "checklist-items/",
+        ChecklistItemCreateView.as_view()
+    ),
+
+    path(
+        "checklist-items/<int:pk>/",
+        ChecklistItemDetailView.as_view()
+    ),
 ]
