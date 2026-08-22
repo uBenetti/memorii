@@ -1,4 +1,6 @@
-[🇺🇸 English/Inglês](README.md)
+<a href="README.md">
+  <img src="assets/PT-br.png" alt="Português Brasileiro" width="120">
+</a>
 
 <p align="center">
   <img src="assets/icon.svg" alt="Memorii" width="180">
