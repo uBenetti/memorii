@@ -1,3 +1,4 @@
+import { useState } from "react";
 import ChecklistItem from "./ChecklistItem";
 
 export default function NoteCard({
@@ -11,11 +12,21 @@ export default function NoteCard({
     onReorder
 }) {
 
+    const [isDragging, setIsDragging] = useState(false);
+
     const handleDragStart = (event) => {
         event.dataTransfer.setData(
             "noteId",
             note.id.toString()
         );
+
+        event.dataTransfer.effectAllowed = "move";
+
+        setIsDragging(true);
+    };
+
+    const handleDragEnd = () => {
+        setIsDragging(false);
     };
 
     const handleDragOver = (event) => {
@@ -40,8 +51,14 @@ export default function NoteCard({
         <div
             draggable
             onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
+
+            style={{
+                opacity: isDragging ? 0.4 : 1,
+                cursor: isDragging ? "grabbing" : "grab"
+            }}
         >
             <div>
                 <h4>{note.title}</h4>
