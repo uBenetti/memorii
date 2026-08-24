@@ -56,7 +56,7 @@ export default function NoteCard({
             onDrop={handleDrop}
 
             style={{
-                opacity: isDragging ? 0.4 : 1,
+                opacity: isDragging ? 0.1 : 1,
                 cursor: isDragging ? "grabbing" : "grab"
             }}
         >
