@@ -193,56 +193,31 @@ const addChecklistItem = async (noteId) => {
     };
 
     const reorderExistingNote = async (
-        draggedNoteId,
-        targetNoteId
+        reorderedNotes
     ) => {
         const token = localStorage.getItem("access");
 
-        const currentNotes = [...notes];
-
-        const draggedIndex = currentNotes.findIndex(
-            (note) => note.id === draggedNoteId
-        );
-
-        const targetIndex = currentNotes.findIndex(
-            (note) => note.id === targetNoteId
-        );
-
-        if (
-            draggedIndex === -1 ||
-            targetIndex === -1 ||
-            draggedIndex === targetIndex
-        ) {
-            return;
-        }
-
-        const [draggedNote] = currentNotes.splice(
-            draggedIndex,
-            1
-        );
-
-        currentNotes.splice(
-            targetIndex,
-            0,
-            draggedNote
-        );
-
-        const reorderedNotes = currentNotes.map(
-            (note, index) => ({
-                ...note,
-                order: index
-            })
-        );
-
-        for (const note of reorderedNotes) {
-            await reorderNote(
-                token,
-                note.id,
-                note.order
-            );
-        }
-
         setNotes(reorderedNotes);
+
+        try {
+            for (const note of reorderedNotes) {
+                await reorderNote(
+                    token,
+                    note.id,
+                    note.order
+                );
+            }
+        } catch (error) {
+            console.error(
+                "Erro ao salvar nova ordem:",
+                error
+            );
+            
+            const updatedNotes =
+                await getNotes(token);
+
+            setNotes(updatedNotes);
+        }
     };
 
     return {

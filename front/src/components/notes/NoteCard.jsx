@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ChecklistItem from "./ChecklistItem";
 
 export default function NoteCard({
@@ -9,55 +8,23 @@ export default function NoteCard({
     onDeleteItem,
     onAddChecklistItem,
     onTogglePin,
-    onReorder
+    onDragStart,
+    onDragOver,
+    onDrop,
+    onDragEnd,
+    isDragging
 }) {
-
-    const [isDragging, setIsDragging] = useState(false);
-
-    const handleDragStart = (event) => {
-        event.dataTransfer.setData(
-            "noteId",
-            note.id.toString()
-        );
-
-        event.dataTransfer.effectAllowed = "move";
-
-        setIsDragging(true);
-    };
-
-    const handleDragEnd = () => {
-        setIsDragging(false);
-    };
-
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
-
-    const handleDrop = (event) => {
-        event.preventDefault();
-
-        const draggedNoteId = Number(
-            event.dataTransfer.getData("noteId")
-        );
-
-        if (draggedNoteId === note.id) {
-            return;
-        }
-
-        onReorder(draggedNoteId, note.id);
-    };
 
     return (
         <div
             draggable
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-
+            onDragStart={(event) => onDragStart(event, note.id)}
+            onDragOver={(event) => onDragOver(event, note.id)}
+            onDrop={(event) => onDrop(event, note.id)}
+            onDragEnd={onDragEnd}
             style={{
-                opacity: isDragging ? 0.1 : 1,
-                cursor: isDragging ? "grabbing" : "grab"
+                opacity: isDragging ? 0.2 : 1,
+                cursor: "grab"
             }}
         >
             <div>
