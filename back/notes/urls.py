@@ -18,7 +18,7 @@ urlpatterns = [
     path("notes/<int:pk>/", NoteDetailView.as_view()),
 
     path(
-        "notes/reorder/",
+        "notes/<int:pk>/reorder/",
         NoteReorderView.as_view(),
         name="note-reorder"
     ),

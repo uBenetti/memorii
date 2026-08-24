@@ -125,14 +125,15 @@ export const updateNotePin = async (
     return response.data;
 };
 
-export const reorderNotes = async (
+export const reorderNote = async (
     token,
-    orderedIds
+    noteId,
+    order
 ) => {
     const response = await api.patch(
-        "notes/reorder/",
+        `notes/${noteId}/reorder/`,
         {
-            ordered_ids: orderedIds
+            order
         },
         {
             headers: {
