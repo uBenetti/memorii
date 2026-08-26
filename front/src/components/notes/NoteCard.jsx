@@ -42,6 +42,11 @@ export default function NoteCard({
                             ? "Desfixar nota"
                             : "Fixar nota"
                     }
+                    style={{
+                        border: "none",
+                        outline: "none",
+                        background: "transparent"
+                    }}
                 >
                     {note.pinned ? "📍" : "📌"}
                 </button>
