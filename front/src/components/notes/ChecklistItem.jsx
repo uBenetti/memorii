@@ -102,6 +102,11 @@ export default function ChecklistItem({
             {onDelete && (
                 <button
                     onClick={() => onDelete(item.id)}
+                    style={{
+                        border: "none",
+                        outline: "none",
+                        background: "transparent"
+                    }}
                 >
                     🗑️
                 </button>
