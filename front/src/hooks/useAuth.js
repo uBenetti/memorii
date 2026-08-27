@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 
 export default function useAuth() {
+    const token = localStorage.getItem("access");
+
     const [username, setUsername] = useState("");
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] =
+        useState(false);
+
+    const [loading, setLoading] = useState(
+        Boolean(token)
+    );
 
     useEffect(() => {
-        const token = localStorage.getItem("access");
-
         if (!token) {
-            setLoading(false);
             return;
         }
 
@@ -30,7 +33,8 @@ export default function useAuth() {
             .finally(() => {
                 setLoading(false);
             });
-    }, []);
+
+    }, [token]);
 
     const logout = () => {
         localStorage.removeItem("access");
@@ -38,6 +42,7 @@ export default function useAuth() {
 
         setUsername("");
         setIsAuthenticated(false);
+        setLoading(false);
     };
 
     return {

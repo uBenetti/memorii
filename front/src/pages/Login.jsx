@@ -16,11 +16,19 @@ export default function Login() {
             const data = await login(username, password);
 
             localStorage.setItem("access", data.access);
+            localStorage.setItem("refresh", data.refresh);
 
             navigate("/dashboard");
         } catch (error){
             console.error(error);
-            alert("Usuário ou senha inválidos");
+            
+            if (error.response?.status === 401){
+                alert("Usuário ou senha inválidos");
+            }   else {
+                alert(
+                    "Não foi possível realizar o login. Tente novamente."
+                );
+            }
         }
     };
 
