@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [search, setSearch] = useState("");
+  const isSearching = search.trim().length > 0;
 
 const handleDeleteNote = async (noteId) => {
   try {
@@ -126,6 +127,7 @@ const filteredNotes = notes.filter((note) => {
           onDeleteChecklistItem={removeChecklistItem}
           onTogglePin={toggleNotePin}
           onReorder={reorderExistingNote}
+          disableDrag={isSearching}
         />
       )}
     </div>

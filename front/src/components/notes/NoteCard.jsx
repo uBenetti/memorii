@@ -12,19 +12,36 @@ export default function NoteCard({
     onDragOver,
     onDrop,
     onDragEnd,
-    isDragging
+    isDragging,
+    disableDrag
 }) {
 
     return (
         <div
-            draggable
-            onDragStart={(event) => onDragStart(event, note.id)}
-            onDragOver={(event) => onDragOver(event, note.id)}
-            onDrop={(event) => onDrop(event, note.id)}
-            onDragEnd={onDragEnd}
+            draggable={disableDrag}
+            onDragStart={
+                disableDrag
+                    ? undefined
+                    : (event) => onDragStart(event, note.id)
+            }
+            onDragOver={
+                disableDrag
+                    ? undefined
+                    : (event) => onDragOver(event, note.id)   
+            }
+            onDrop={
+                disableDrag
+                    ? undefined
+                    : (event) => onDrop(event, note.id)
+            }
+            onDragEnd={
+                disableDrag
+                    ? undefined
+                    : onDragEnd
+            }
             style={{
                 opacity: isDragging ? 0.2 : 1,
-                cursor: "grab"
+                cursor: disableDrag ? "default" : "grab"
             }}
         >
             <div>
