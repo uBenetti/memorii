@@ -6,6 +6,7 @@ import useAuth from "../hooks/useAuth";
 import useNotes from "../hooks/useNotes";
 import CreateNoteModal from "../components/notes/CreateNoteModal";
 import EditNoteModal from "../components/notes/EditingNoteModal";
+import NoteSearch from "../components/notes/NoteSearch";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function Dashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [search, setSearch] = useState("");
 
 const handleDeleteNote = async (noteId) => {
   try {
@@ -43,6 +45,33 @@ const handleLogout = () => {
   logout();
   navigate("/");
 };
+
+const filteredNotes = notes.filter((note) => {
+    const searchText = search.toLowerCase();
+
+    const titleMatches =
+        note.title
+            ?.toLowerCase()
+            .includes(searchText);
+
+    const contentMatches =
+        note.content
+            ?.toLowerCase()
+            .includes(searchText);
+
+    const checklistMatches =
+        note.items?.some((item) =>
+            item.text
+                ?.toLowerCase()
+                .includes(searchText)
+        );
+
+    return (
+        titleMatches ||
+        contentMatches ||
+        checklistMatches
+    );
+});
 
   return (
     <div>
@@ -74,13 +103,22 @@ const handleLogout = () => {
 
       </div>
 
+      <NoteSearch
+        search={search}
+        onSearchChange={setSearch}
+      />
+
       <h3>Minhas Notas</h3>
       
       {loading ? (
         <p>Carregando notas...</p>
+      ) : filteredNotes.length === 0 ? (
+        <p>
+          Nenhuma Nota encontrada
+        </p>
       ) : (
         <NotesGrid
-          notes={notes}
+          notes={filteredNotes}
           onDelete={handleDeleteNote}
           onEdit={handleEditNote}
           onUpdateItem={updateExistingChecklistItem}
