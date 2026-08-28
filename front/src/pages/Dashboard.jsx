@@ -6,7 +6,7 @@ import useAuth from "../hooks/useAuth";
 import useNotes from "../hooks/useNotes";
 import CreateNoteModal from "../components/notes/CreateNoteModal";
 import EditNoteModal from "../components/notes/EditingNoteModal";
-import NoteSearch from "../components/notes/NoteSearch";
+import NotesSearch from "../components/notes/NotesSearch";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -103,7 +103,7 @@ const filteredNotes = notes.filter((note) => {
 
       </div>
 
-      <NoteSearch
+      <NotesSearch
         search={search}
         onSearchChange={setSearch}
       />
