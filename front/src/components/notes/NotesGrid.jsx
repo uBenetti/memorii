@@ -170,7 +170,7 @@ export default function NotesGrid({
                         draggedNoteId ===
                         note.id
                     }
-                    disableDra={disableDrag}
+                    disableDrag={disableDrag}
                 />
             ))}
         </div>

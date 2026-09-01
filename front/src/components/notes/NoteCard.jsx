@@ -18,7 +18,7 @@ export default function NoteCard({
 
     return (
         <div
-            draggable={disableDrag}
+            draggable={!disableDrag}
             onDragStart={
                 disableDrag
                     ? undefined
