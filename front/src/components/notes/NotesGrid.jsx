@@ -10,6 +10,7 @@ export default function NotesGrid({
     onDeleteChecklistItem,
     onTogglePin,
     onReorder,
+    onReorderChecklistItems,
     disableDrag
 }) {
     const [draggedNoteId, setDraggedNoteId] = useState(null);
@@ -148,6 +149,10 @@ export default function NotesGrid({
                     }
                     onTogglePin={
                         onTogglePin
+                    }
+
+                    onReorderChecklistItems={
+                        onReorderChecklistItems
                     }
 
                     onDragStart={

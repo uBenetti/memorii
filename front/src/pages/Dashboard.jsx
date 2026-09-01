@@ -21,7 +21,8 @@ export default function Dashboard() {
     addChecklistItem,
     removeChecklistItem,
     toggleNotePin,
-    reorderExistingNote
+    reorderExistingNote,
+    reorderExistingChecklistItems
   } = useNotes();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -127,6 +128,7 @@ const filteredNotes = notes.filter((note) => {
           onDeleteChecklistItem={removeChecklistItem}
           onTogglePin={toggleNotePin}
           onReorder={reorderExistingNote}
+          onReorderChecklistItems={reorderExistingChecklistItems}
           disableDrag={isSearching}
         />
       )}

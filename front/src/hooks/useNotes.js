@@ -9,7 +9,8 @@ import {
     reorderNote,
     updateChecklistItem,
     createChecklistItem,
-    deleteChecklistItem
+    deleteChecklistItem,
+    reorderChecklistItem
 } from "../services/noteService";
 
 export default function useNotes() {
@@ -172,6 +173,38 @@ const addChecklistItem = async (noteId) => {
         );
     };
 
+    const reorderExistingChecklistItems = async (noteId, reorderedItems) => {
+        const token = localStorage.getItem("access");
+
+        setNotes((prev) =>
+            prev.map((note)=>{
+                if (note.id !== noteId) {
+                    return note;
+                }
+
+                return {
+                    ...note,
+                    items: reorderedItems
+                };
+            })
+        );
+
+        try {
+            for (const item of reorderedItems) {
+                await reorderChecklistItem(token, item.id, item.order);
+            }
+        } catch(error){
+            console.error(
+                "Erro ao salvar nova ordem da checklist:",
+                error
+            );
+
+            const updatedNotes = await getNotes(token);
+
+            setNotes(updatedNotes);
+        }
+    };
+
     const toggleNotePin = async (noteId, pinned) => {
         const token = localStorage.getItem("access");
 
@@ -229,6 +262,7 @@ const addChecklistItem = async (noteId) => {
         addChecklistItem,
         removeChecklistItem,
         toggleNotePin,
-        reorderExistingNote
+        reorderExistingNote,
+        reorderExistingChecklistItems
     };
 }

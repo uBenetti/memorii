@@ -13,7 +13,8 @@ export default function NoteCard({
     onDrop,
     onDragEnd,
     isDragging,
-    disableDrag
+    disableDrag,
+    onReorderChecklistItems
 }) {
 
     return (
