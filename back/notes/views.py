@@ -81,6 +81,60 @@ class ChecklistItemCreateView(generics.CreateAPIView):
 
         serializer.save()
 
+class ChecklistItemReorderView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pk):
+
+        try:
+            item = ChecklistItem.objects.get(
+                pk=pk,
+                note__user=request.user
+            )
+
+        except ChecklistItem.DoesNotExist:
+            return Response(
+                {
+                    "detail":
+                    "Item da checklist não encontrado."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        new_order = request.data.get("order")
+
+        if new_order is None:
+            return Response(
+                {
+                    "detail":
+                    "O campo order é obrigatório."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            new_order = int(new_order)
+
+        except (TypeError, ValueError):
+            return Response(
+                {
+                    "detail":
+                    "O campo order deve ser um número."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        item.order = new_order
+
+        item.save(
+            update_fields=["order"]
+        )
+
+        return Response({
+            "id": item.id,
+            "order": item.order
+        })
+
 class NoteReorderView(APIView):
     permission_classes = [IsAuthenticated]
 

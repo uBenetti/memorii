@@ -7,7 +7,8 @@ from .views import (
     NoteDetailView,
     ChecklistItemDetailView,
     ChecklistItemCreateView,
-    NoteReorderView
+    NoteReorderView,
+    ChecklistItemReorderView
 )
 
 urlpatterns = [
@@ -31,5 +32,11 @@ urlpatterns = [
     path(
         "checklist-items/<int:pk>/",
         ChecklistItemDetailView.as_view()
+    ),
+
+    path(
+        "checklist-items/<int:pk>/reorder/",
+        ChecklistItemReorderView.as_view(),
+        name="checklist-item-reorder"
     ),
 ]
