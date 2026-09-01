@@ -3,7 +3,12 @@ import { useState } from "react";
 export default function ChecklistItem({
     item,
     onUpdate,
-    onDelete
+    onDelete,
+    onDragStart,
+    onDragOver,
+    onDrop,
+    onDragEnd,
+    isDragging
 }) {
     const [text, setText] = useState(item.text);
     const [isSaving, setIsSaving] = useState(false);
@@ -64,10 +69,33 @@ export default function ChecklistItem({
 
     return (
         <div
+            draggable
+            onDragStart={(event)=>{
+                event.stopPropagation();
+                onDragStart?.(event,item.id);
+            }}
+            onDragOver={(event)=>{
+                event.preventDefault();
+                event.stopPropagation();
+
+                onDragOver(event,item.id);
+            }}
+            onDrop={(event)=>{
+                event.preventDefault();
+                event.stopPropagation();
+
+                onDrop(event,item.id);
+            }}
+            onDragEnd={(event) => {
+                event.stopPropagation();
+                onDragEnd();
+            }}
             style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "6px"
+                gap: "6px",
+                opacity: isDragging ? 0.2 : 1,
+                cursor: "grab"
             }}
         >
             <input

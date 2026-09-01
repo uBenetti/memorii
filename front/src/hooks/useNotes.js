@@ -173,38 +173,44 @@ const addChecklistItem = async (noteId) => {
         );
     };
 
-    const reorderExistingChecklistItems = async (noteId, reorderedItems) => {
+    const reorderExistingChecklistItems = async (
+        noteId,
+        reorderedItems
+    ) => {
         const token = localStorage.getItem("access");
 
-        setNotes((prev) =>
-            prev.map((note)=>{
-                if (note.id !== noteId) {
-                    return note;
-                }
+        const previousNotes = notes;
 
-                return {
-                    ...note,
-                    items: reorderedItems
-                };
-            })
+        setNotes((currentNotes) =>
+            currentNotes.map((note) =>
+                note.id === noteId
+                    ? {
+                        ...note,
+                        items: reorderedItems
+                    }
+                    : note
+            )
         );
 
         try {
             for (const item of reorderedItems) {
-                await reorderChecklistItem(token, item.id, item.order);
+                await reorderChecklistItem(
+                    token,
+                    item.id,
+                    item.order
+                );
             }
-        } catch(error){
+
+        } catch (error) {
             console.error(
-                "Erro ao salvar nova ordem da checklist:",
+                "Erro ao salvar ordem dos itens:",
                 error
             );
 
-            const updatedNotes = await getNotes(token);
-
-            setNotes(updatedNotes);
+            setNotes(previousNotes);
         }
     };
-
+    
     const toggleNotePin = async (noteId, pinned) => {
         const token = localStorage.getItem("access");
 
