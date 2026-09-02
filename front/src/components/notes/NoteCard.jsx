@@ -129,6 +129,22 @@ export default function NoteCard({
         setDraggedItems(null);
     };
 
+    const handleCreateItemBelow = async (currentItem) => {
+        const currentIndex =
+            displayedItems.findIndex(
+                (item) => item.id === currentItem.id
+            );
+
+        const newItem = await onAddChecklistItem(
+            note.id,
+            currentIndex + 1
+        );
+
+        if (!newItem) {
+            return;
+        }
+    };
+
     return (
         <div
             draggable={!disableDrag}
@@ -196,6 +212,8 @@ export default function NoteCard({
                             item={item}
                             onUpdate={onUpdateItem}
                             onDelete={onDeleteItem}
+
+                            onCreateBelow={handleCreateItemBelow}
 
                             onDragStart={handleItemDragStart}
                             onDragOver={handleItemDragOver}

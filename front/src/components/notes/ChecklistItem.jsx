@@ -4,6 +4,7 @@ export default function ChecklistItem({
     item,
     onUpdate,
     onDelete,
+    onCreateBelow,
     onDragStart,
     onDragOver,
     onDrop,
@@ -57,9 +58,32 @@ export default function ChecklistItem({
         }
     };
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = async (event) => {
         if (event.key === "Enter") {
-            event.currentTarget.blur();
+            event.preventDefault();
+
+            if (text !== item.text) {
+                try {
+                    setIsSaving(true);
+
+                    await onUpdate(item.id, {
+                        text: text
+                    });
+
+                } catch (error) {
+                    console.error(
+                        "Erro ao salvar texto:",
+                        error
+                    );
+
+                    return;
+
+                } finally {
+                    setIsSaving(false);
+                }
+            }
+
+            onCreateBelow(item);
         }
 
         if (event.key === "Escape") {

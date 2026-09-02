@@ -126,40 +126,87 @@ export default function useNotes() {
     return updatedItem;
 };
 
-const addChecklistItem = async (noteId) => {
-        const token = localStorage.getItem("access");
+const addChecklistItem = async (
+    noteId,
+    insertIndex = null
+) => {
+    const token = localStorage.getItem("access");
 
-        const note = notes.find(
-            (n) => n.id === noteId
+    const note = notes.find(
+        (n) => n.id === noteId
+    );
+
+    if (!note) {
+        console.error(
+            "Nota não encontrada:",
+            noteId
         );
 
-        if(!note){
-            console.error("Nota não encontrada: ", noteId);
-            return;
-        }
+        return;
+    }
 
-        const items = note.items || [];
+    const currentItems =
+        [...(note.items || [])]
+            .sort((a, b) => a.order - b.order);
 
-        const newItem = await createChecklistItem(
-            token, noteId, items.length
+    const order =
+        insertIndex === null
+            ? currentItems.length
+            : insertIndex;
+
+    const newItem =
+        await createChecklistItem(
+            token,
+            noteId,
+            order
         );
 
-        setNotes((prev) =>
-            prev.map((n) => {
-                if(n.id !== noteId)
-                    return n;
-                return {
-                    ...n,
-                    items: [
-                        ...(n.items || []),
-                        newItem
-                    ]
-                };
+    const updatedItems =
+        [...currentItems];
+
+    updatedItems.splice(
+        order,
+        0,
+        newItem
+    );
+
+    const reorderedItems =
+        updatedItems.map(
+            (item, index) => ({
+                ...item,
+                order: index
             })
         );
 
-        return newItem;
-    };
+    setNotes((prev) =>
+        prev.map((note) =>
+            note.id === noteId
+                ? {
+                    ...note,
+                    items: reorderedItems
+                }
+                : note
+        )
+    );
+
+    try {
+        for (const item of reorderedItems) {
+            await reorderChecklistItem(
+                token,
+                item.id,
+                item.order
+            );
+        }
+
+    } catch (error) {
+        console.error(
+            "Erro ao reorganizar checklist:",
+            error
+        );
+    }
+
+    return newItem;
+};
 
     const removeChecklistItem = async (itemId) => {
 
