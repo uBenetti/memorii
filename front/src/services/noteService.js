@@ -145,17 +145,22 @@ export const reorderNote = async (
     return response.data;
 };
 
-export const reorderChecklistItem = async (token, itemId, order) => {
-    const response = await api.patch(
-        `checklist-tems/${itemId}/reorder`,{
-            order
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
+export const reorderChecklistItem = async (
+    token,
+    itemId,
+        order
+    ) => {
+        const response = await api.patch(
+            `checklist-items/${itemId}/reorder/`,
+            {
+                order
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             }
-        }
-    );
+        );
 
-    return response.data;
-};
+        return response.data;
+    };
