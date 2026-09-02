@@ -12,6 +12,7 @@ export default function ChecklistItem({
 }) {
     const [text, setText] = useState(item.text);
     const [isSaving, setIsSaving] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     const handleToggle = async () => {
         try {
@@ -67,37 +68,79 @@ export default function ChecklistItem({
         }
     };
 
+    const showActions =
+        isHovered || isDragging;
+
     return (
         <div
-            draggable
-            onDragStart={(event)=>{
-                event.stopPropagation();
-                onDragStart?.(event,item.id);
-            }}
-            onDragOver={(event)=>{
+            onMouseEnter={() =>
+                setIsHovered(true)
+            }
+            onMouseLeave={() =>
+                setIsHovered(false)
+            }
+            onDragOver={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                onDragOver(event,item.id);
+                onDragOver(event, item.id);
             }}
-            onDrop={(event)=>{
+            onDrop={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                onDrop(event,item.id);
-            }}
-            onDragEnd={(event) => {
-                event.stopPropagation();
-                onDragEnd();
+                onDrop(event, item.id);
             }}
             style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
                 opacity: isDragging ? 0.2 : 1,
-                cursor: "grab"
+                minHeight: "32px"
             }}
         >
+
+            {/* BOTÃO PARA ARRASTAR */}
+            <button
+                draggable
+                onDragStart={(event) => {
+                    event.stopPropagation();
+
+                    onDragStart(
+                        event,
+                        item.id
+                    );
+                }}
+                onDragEnd={(event) => {
+                    event.stopPropagation();
+
+                    onDragEnd();
+                }}
+                title="Mover item"
+                aria-label="Mover item"
+                style={{
+                    border: "none",
+                    background: "transparent",
+                    cursor: "grab",
+                    fontSize: "18px",
+                    padding: "0 4px",
+
+                    opacity:
+                        showActions ? 1 : 0,
+
+                    pointerEvents:
+                        showActions
+                            ? "auto"
+                            : "none",
+
+                    transition:
+                        "opacity 0.15s ease"
+                }}
+            >
+                ⠿
+            </button>
+
+            {/* CHECKBOX */}
             <input
                 type="checkbox"
                 checked={item.completed}
@@ -105,6 +148,7 @@ export default function ChecklistItem({
                 disabled={isSaving}
             />
 
+            {/* TEXTO */}
             <input
                 value={text}
                 placeholder=""
@@ -115,30 +159,50 @@ export default function ChecklistItem({
                 onKeyDown={handleKeyDown}
                 disabled={isSaving}
                 style={{
+                    flex: 1,
                     border: "none",
                     outline: "none",
                     background: "transparent",
                     padding: 0,
                     margin: 0,
                     font: "inherit",
-                    textDecoration: item.completed
-                        ? "line-through"
-                        : "none"
+
+                    textDecoration:
+                        item.completed
+                            ? "line-through"
+                            : "none"
                 }}
             />
 
+            {/* BOTÃO DE EXCLUIR */}
             {onDelete && (
                 <button
-                    onClick={() => onDelete(item.id)}
+                    onClick={() =>
+                        onDelete(item.id)
+                    }
+                    title="Excluir item"
                     style={{
                         border: "none",
                         outline: "none",
-                        background: "transparent"
+                        background: "transparent",
+                        cursor: "pointer",
+
+                        opacity:
+                            showActions ? 1 : 0,
+
+                        pointerEvents:
+                            showActions
+                                ? "auto"
+                                : "none",
+
+                        transition:
+                            "opacity 0.15s ease"
                     }}
                 >
                     🗑️
                 </button>
             )}
+
         </div>
     );
 }
