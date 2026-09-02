@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ChecklistItem({
     item,
@@ -9,11 +9,20 @@ export default function ChecklistItem({
     onDragOver,
     onDrop,
     onDragEnd,
-    isDragging
+    isDragging,
+    autoFocus
 }) {
     const [text, setText] = useState(item.text);
     const [isSaving, setIsSaving] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (autoFocus && inputRef.current){
+            inputRef.current.focus();
+        }
+    }, [autoFocus]);
 
     const handleToggle = async () => {
         try {
@@ -83,7 +92,7 @@ export default function ChecklistItem({
                 }
             }
 
-            onCreateBelow(item);
+            await onCreateBelow(item);
         }
 
         if (event.key === "Escape") {
@@ -174,6 +183,7 @@ export default function ChecklistItem({
 
             {/* TEXTO */}
             <input
+                ref={inputRef}
                 value={text}
                 placeholder=""
                 onChange={(event) => {

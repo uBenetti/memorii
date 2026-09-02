@@ -24,6 +24,9 @@ export default function NoteCard({
     const [draggedItems, setDraggedItems] =
         useState(null);
 
+    const [focusItemId, setFocusItemId] =
+        useState(null);
+
     const orderedItems = [...(note.items || [])]
         .sort((a, b) => a.order - b.order);
 
@@ -143,6 +146,8 @@ export default function NoteCard({
         if (!newItem) {
             return;
         }
+
+        setFocusItemId(newItem.id);
     };
 
     return (
@@ -221,6 +226,8 @@ export default function NoteCard({
                             onDragEnd={handleItemDragEnd}
 
                             isDragging={draggedItemId === item.id}
+                        
+                            autoFocus={focusItemId === item.id}
                         />
                     ))}
 
