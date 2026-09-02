@@ -15,6 +15,7 @@ import {
 
 export default function useNotes() {
     const [notes, setNotes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem("access");
@@ -24,7 +25,13 @@ export default function useNotes() {
                 setNotes(data);
             })
             .catch((error) => {
-                console.error(error);
+                console.error(
+                    "Erro ao carregar notas:",
+                    error
+                );
+            })
+            .finally(() => {
+                setLoading(false);
             });
     }, []);
 
@@ -261,6 +268,7 @@ const addChecklistItem = async (noteId) => {
 
     return {
         notes,
+        loading,
         createNewNote,
         deleteExistingNote,
         updateExistingNote,
