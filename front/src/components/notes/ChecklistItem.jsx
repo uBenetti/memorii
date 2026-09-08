@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 
 export default function ChecklistItem({
     item,
@@ -18,7 +18,7 @@ export default function ChecklistItem({
 
     const inputRef = useRef(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (autoFocus && inputRef.current){
             inputRef.current.focus();
         }
