@@ -132,6 +132,25 @@ export default function NoteCard({
         setDraggedItems(null);
     };
 
+    const handleDeleteItem = async(itemId,focusPrevious = false) => {
+        const currentIndex =
+            displayedItems.findIndex(
+                (item) => item.id === itemId
+            );
+        
+        let previousItem = null;
+
+        if(focusPrevious && currentIndex > 0){
+            previousItem = displayedItems[currentIndex - 1];
+        }
+
+        await onDeleteItem(itemId);
+
+        if (previousItem) {
+            setFocusItemId(previousItem.id);
+        }
+    };
+
     const handleCreateItemBelow = async (currentItem) => {
         const currentIndex =
             displayedItems.findIndex(
@@ -216,7 +235,7 @@ export default function NoteCard({
                             key={item.id}
                             item={item}
                             onUpdate={onUpdateItem}
-                            onDelete={onDeleteItem}
+                            onDelete={handleDeleteItem}
 
                             onCreateBelow={handleCreateItemBelow}
 

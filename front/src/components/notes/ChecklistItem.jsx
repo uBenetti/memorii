@@ -68,6 +68,14 @@ export default function ChecklistItem({
     };
 
     const handleKeyDown = async (event) => {
+        if(event.key == "Backspace" && text === ""){
+            event.preventDefault();
+
+            await onDelete(item.id, true);
+
+            return;
+        }
+
         if (event.key === "Enter") {
             event.preventDefault();
 
