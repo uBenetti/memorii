@@ -33,7 +33,7 @@ export default function NoteCard({
     const displayedItems =
         draggedItems || orderedItems;
 
-    const handleItemDragStart =(event, itemId) => {
+    const handleItemDragStart = (event, itemId) => {
         event.stopPropagation();
 
         setDraggedItemId(itemId);
@@ -132,16 +132,23 @@ export default function NoteCard({
         setDraggedItems(null);
     };
 
-    const handleDeleteItem = async(itemId,focusPrevious = false) => {
+    const handleDeleteItem = async (
+        itemId,
+        focusPrevious = false
+    ) => {
         const currentIndex =
             displayedItems.findIndex(
                 (item) => item.id === itemId
             );
-        
+
         let previousItem = null;
 
-        if(focusPrevious && currentIndex > 0){
-            previousItem = displayedItems[currentIndex - 1];
+        if (
+            focusPrevious &&
+            currentIndex > 0
+        ) {
+            previousItem =
+                displayedItems[currentIndex - 1];
         }
 
         await onDeleteItem(itemId);
@@ -151,16 +158,20 @@ export default function NoteCard({
         }
     };
 
-    const handleCreateItemBelow = async (currentItem) => {
+    const handleCreateItemBelow = async (
+        currentItem
+    ) => {
         const currentIndex =
             displayedItems.findIndex(
-                (item) => item.id === currentItem.id
+                (item) =>
+                    item.id === currentItem.id
             );
 
-        const newItem = await onAddChecklistItem(
-            note.id,
-            currentIndex + 1
-        );
+        const newItem =
+            await onAddChecklistItem(
+                note.id,
+                currentIndex + 1
+            );
 
         if (!newItem) {
             return;
@@ -169,34 +180,74 @@ export default function NoteCard({
         setFocusItemId(newItem.id);
     };
 
+    const handleCardClick = (event) => {
+        /*
+         * Se o clique veio de algum botão,
+         * não devemos abrir o modal.
+         */
+        if (
+            event.target.closest("button") ||
+            event.target.closest("input")
+        ) {
+            return;
+        }
+
+        onEdit(note);
+    };
+
     return (
         <div
+            onClick={handleCardClick}
+
             draggable={!disableDrag}
+
             onDragStart={
                 disableDrag
                     ? undefined
-                    : (event) => onDragStart(event, note.id)
+                    : (event) =>
+                        onDragStart(
+                            event,
+                            note.id
+                        )
             }
+
             onDragOver={
                 disableDrag
                     ? undefined
-                    : (event) => onDragOver(event, note.id)   
+                    : (event) =>
+                        onDragOver(
+                            event,
+                            note.id
+                        )
             }
+
             onDrop={
                 disableDrag
                     ? undefined
-                    : (event) => onDrop(event, note.id)
+                    : (event) =>
+                        onDrop(
+                            event,
+                            note.id
+                        )
             }
+
             onDragEnd={
                 disableDrag
                     ? undefined
                     : onDragEnd
             }
+
             style={{
-                opacity: isDragging ? 0.2 : 1,
-                cursor: disableDrag ? "default" : "grab"
+                opacity:
+                    isDragging ? 0.2 : 1,
+
+                cursor:
+                    disableDrag
+                        ? "pointer"
+                        : "grab"
             }}
         >
+
             <div>
                 <h4>{note.title}</h4>
 
@@ -207,52 +258,92 @@ export default function NoteCard({
                             !note.pinned
                         )
                     }
+
                     title={
                         note.pinned
                             ? "Desfixar nota"
                             : "Fixar nota"
                     }
+
                     style={{
                         border: "none",
                         outline: "none",
-                        background: "transparent"
+                        background:
+                            "transparent",
+                        cursor: "pointer"
                     }}
                 >
-                    {note.pinned ? "📍" : "📌"}
+                    {note.pinned
+                        ? "📍"
+                        : "📌"}
                 </button>
             </div>
 
             {note.note_type === "text" && (
-                <p style={{ whiteSpace: "pre-wrap" }}>
+                <p
+                    style={{
+                        whiteSpace:
+                            "pre-wrap"
+                    }}
+                >
                     {note.content}
                 </p>
             )}
 
             {note.note_type === "checklist" && (
                 <div>
-                    {displayedItems.map((item) => (
-                        <ChecklistItem
-                            key={item.id}
-                            item={item}
-                            onUpdate={onUpdateItem}
-                            onDelete={handleDeleteItem}
+                    {displayedItems.map(
+                        (item) => (
+                            <ChecklistItem
+                                key={item.id}
+                                item={item}
 
-                            onCreateBelow={handleCreateItemBelow}
+                                onUpdate={
+                                    onUpdateItem
+                                }
 
-                            onDragStart={handleItemDragStart}
-                            onDragOver={handleItemDragOver}
-                            onDrop={handleItemDrop}
-                            onDragEnd={handleItemDragEnd}
+                                onDelete={
+                                    handleDeleteItem
+                                }
 
-                            isDragging={draggedItemId === item.id}
-                        
-                            autoFocus={focusItemId === item.id}
-                        />
-                    ))}
+                                onCreateBelow={
+                                    handleCreateItemBelow
+                                }
+
+                                onDragStart={
+                                    handleItemDragStart
+                                }
+
+                                onDragOver={
+                                    handleItemDragOver
+                                }
+
+                                onDrop={
+                                    handleItemDrop
+                                }
+
+                                onDragEnd={
+                                    handleItemDragEnd
+                                }
+
+                                isDragging={
+                                    draggedItemId ===
+                                    item.id
+                                }
+
+                                autoFocus={
+                                    focusItemId ===
+                                    item.id
+                                }
+                            />
+                        )
+                    )}
 
                     <button
                         onClick={() =>
-                            onAddChecklistItem(note.id)
+                            onAddChecklistItem(
+                                note.id
+                            )
                         }
                     >
                         +
@@ -261,18 +352,12 @@ export default function NoteCard({
             )}
 
             <button
-                onClick={() => onDelete(note.id)}
+                onClick={() =>
+                    onDelete(note.id)
+                }
             >
                 Excluir
             </button>
-
-            {note.note_type === "text" && (
-                <button
-                    onClick={() => onEdit(note)}
-                >
-                    Editar
-                </button>
-            )}
 
             <hr />
         </div>
