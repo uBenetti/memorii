@@ -101,6 +101,10 @@ const filteredNotes = notes.filter((note) => {
           }}
           note={selectedNote}
           onUpdate={updateExistingNote}
+          onUpdateItem={updateExistingChecklistItem}
+          onDeleteItem={removeChecklistItem}
+          onAddChecklistItem={addChecklistItem}
+          onReorderChecklistItems={reorderExistingChecklistItems}
         />
 
       </div>
