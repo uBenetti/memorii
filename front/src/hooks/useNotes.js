@@ -27,20 +27,18 @@ export default function useNotes() {
         const token = localStorage.getItem("access");
 
         await updateNote(token, noteId,{
-            title, content, note_type: "checklist"
+            title, content: "", note_type: "checklist"
         });
 
-        for(
-            const itemId of deletedItemId
-        ){
+        for(const itemId of deletedItemId        ){
             await deleteChecklistItem(
                 token, itemId
             );
         }
 
-        for (
-            const item of items
-        ){
+        const savedItems=[];
+
+        for (const item of items){
             if (item.isNew){
                 const createdItem = await createChecklistItem(
                     token,
@@ -49,20 +47,23 @@ export default function useNotes() {
                     item.text,
                     item.completed
                 );
-
-                item.id=createdItem.id;
-
-                item.isNew=false;
+                
+                savedItems.push(createdItem);
+            }   else {
+                savedItems.push(item);
             }
         }
 
-        for(const item of items){
-            if(item.isNew){
+        for(const item of savedItems){
+            if(typeof item.is !== "number"){
                 continue;
             }
 
-            const originalItem = notes.find((note) => note.id ===noteId)
-                ?.items?.find((original) => original.id === item.id);
+            const originalNote = notes.find((note) => note.id === noteId);
+
+            const originalItem = originalNote?.items?.find(
+                (original) => original.id === item.id
+            );
             
             if (!originalItem) {
                 continue;
@@ -79,7 +80,7 @@ export default function useNotes() {
             }
         }
 
-        for (const item of items) {
+        for (const item of savedItems) {
             await reorderChecklistItem(token, item.id, item.order);
         }
 
