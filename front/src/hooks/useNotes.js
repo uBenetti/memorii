@@ -26,10 +26,6 @@ export default function useNotes() {
         const token =
             localStorage.getItem("access");
 
-        /*
-        * 1. Atualiza os dados principais
-        * da nota.
-        */
         await updateNote(
             token,
             noteId,
@@ -40,10 +36,6 @@ export default function useNotes() {
             }
         );
 
-        /*
-        * 2. Exclui do backend os itens
-        * que foram removidos durante a edição.
-        */
         for (
             const itemId of deletedItemIds
         ) {
@@ -53,12 +45,6 @@ export default function useNotes() {
             );
         }
 
-        /*
-        * 3. Cria os novos itens.
-        *
-        * Os itens criados no ChecklistEditor
-        * possuem isNew: true.
-        */
         const savedItems = [];
 
         for (
@@ -84,11 +70,6 @@ export default function useNotes() {
             }
         }
 
-        /*
-        * 4. Atualiza os itens existentes
-        * que tiveram seu texto ou checkbox
-        * alterados.
-        */
         const originalNote =
             notes.find(
                 (note) =>
@@ -98,10 +79,6 @@ export default function useNotes() {
         for (
             const item of savedItems
         ) {
-
-            /*
-            * Ignora itens sem ID numérico.
-            */
             if (
                 typeof item.id !==
                 "number"
@@ -115,11 +92,6 @@ export default function useNotes() {
                         original.id ===
                         item.id
                 );
-
-            /*
-            * Se não existia na nota original,
-            * não precisamos atualizá-lo.
-            */
             if (!originalItem) {
                 continue;
             }
@@ -143,10 +115,6 @@ export default function useNotes() {
                 );
             }
         }
-
-        /*
-        * 5. Salva a ordem dos itens.
-        */
         for (
             const item of savedItems
         ) {
@@ -157,24 +125,21 @@ export default function useNotes() {
             );
         }
 
-        /*
-        * 6. Busca novamente todas as notas.
-        *
-        * Isso atualiza imediatamente
-        * o card fora do modal.
-        */
-        const updatedNotes =
-            await getNotes(token);
+        setNotes((currentNotes) => currentNotes.map((note)=>
+        note.id === noteId
+            ? {
+                ...note,
+                title,
+                items: savedItems
+            }
+            : note
+    ));
 
-        setNotes(updatedNotes);
-
-        /*
-        * Retorna a nota atualizada.
-        */
-        return updatedNotes.find(
-            (note) =>
-                note.id === noteId
-        );
+    return {
+        ...originalNote,
+        title,
+        items: savedItems
+    };
     };
 
     useEffect(() => {
