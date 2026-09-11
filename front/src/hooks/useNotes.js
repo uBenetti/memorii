@@ -17,78 +17,164 @@ export default function useNotes() {
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const saveChecklistChanges = async(
+    const saveChecklistChanges = async (
         noteId,
         title,
-        content,
         items,
-        deletedItemId
+        deletedItemIds
     ) => {
-        const token = localStorage.getItem("access");
+        const token =
+            localStorage.getItem("access");
 
-        await updateNote(token, noteId,{
-            title, content: "", note_type: "checklist"
-        });
+        /*
+        * 1. Atualiza os dados principais
+        * da nota.
+        */
+        await updateNote(
+            token,
+            noteId,
+            {
+                title,
+                content: "",
+                note_type: "checklist"
+            }
+        );
 
-        for(const itemId of deletedItemId        ){
+        /*
+        * 2. Exclui do backend os itens
+        * que foram removidos durante a edição.
+        */
+        for (
+            const itemId of deletedItemIds
+        ) {
             await deleteChecklistItem(
-                token, itemId
+                token,
+                itemId
             );
         }
 
-        const savedItems=[];
+        /*
+        * 3. Cria os novos itens.
+        *
+        * Os itens criados no ChecklistEditor
+        * possuem isNew: true.
+        */
+        const savedItems = [];
 
-        for (const item of items){
-            if (item.isNew){
-                const createdItem = await createChecklistItem(
-                    token,
-                    noteId,
-                    item.order,
-                    item.text,
-                    item.completed
+        for (
+            const item of items
+        ) {
+            if (item.isNew) {
+
+                const createdItem =
+                    await createChecklistItem(
+                        token,
+                        noteId,
+                        item.order,
+                        item.text,
+                        item.completed
+                    );
+
+                savedItems.push(
+                    createdItem
                 );
-                
-                savedItems.push(createdItem);
-            }   else {
+
+            } else {
                 savedItems.push(item);
             }
         }
 
-        for(const item of savedItems){
-            if(typeof item.is !== "number"){
+        /*
+        * 4. Atualiza os itens existentes
+        * que tiveram seu texto ou checkbox
+        * alterados.
+        */
+        const originalNote =
+            notes.find(
+                (note) =>
+                    note.id === noteId
+            );
+
+        for (
+            const item of savedItems
+        ) {
+
+            /*
+            * Ignora itens sem ID numérico.
+            */
+            if (
+                typeof item.id !==
+                "number"
+            ) {
                 continue;
             }
 
-            const originalNote = notes.find((note) => note.id === noteId);
+            const originalItem =
+                originalNote?.items?.find(
+                    (original) =>
+                        original.id ===
+                        item.id
+                );
 
-            const originalItem = originalNote?.items?.find(
-                (original) => original.id === item.id
-            );
-            
+            /*
+            * Se não existia na nota original,
+            * não precisamos atualizá-lo.
+            */
             if (!originalItem) {
                 continue;
             }
 
-            const changed = originalItem.text !== item.text ||
-                originalItem.completed !== item.completed;
+            const changed =
+                originalItem.text !==
+                    item.text ||
+                originalItem.completed !==
+                    item.completed;
 
             if (changed) {
-                await updateChecklistItem(token, item.id, {
-                    text: item.text,
-                    completed: item.completed
-                });
+
+                await updateChecklistItem(
+                    token,
+                    item.id,
+                    {
+                        text: item.text,
+                        completed:
+                            item.completed
+                    }
+                );
             }
         }
 
-        for (const item of savedItems) {
-            await reorderChecklistItem(token, item.id, item.order);
+        /*
+        * 5. Salva a ordem dos itens.
+        */
+        for (
+            const item of savedItems
+        ) {
+            await reorderChecklistItem(
+                token,
+                item.id,
+                item.order
+            );
         }
 
-        const updatedNotes= await getNotes(token);
+        /*
+        * 6. Busca novamente todas as notas.
+        *
+        * Isso atualiza imediatamente
+        * o card fora do modal.
+        */
+        const updatedNotes =
+            await getNotes(token);
 
         setNotes(updatedNotes);
 
-        return updatedNotes.find((note) => note.id === noteId);
+        /*
+        * Retorna a nota atualizada.
+        */
+        return updatedNotes.find(
+            (note) =>
+                note.id === noteId
+        );
     };
 
     useEffect(() => {

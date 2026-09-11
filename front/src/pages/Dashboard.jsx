@@ -95,7 +95,7 @@ const filteredNotes = notes.filter((note) => {
         />
 
         <EditNoteModal
-        key={`${selectedNote?.id}-${showEditModal}`}
+          key={`${selectedNote?.id}-${showEditModal}`}
           isOpen={showEditModal}
           onClose={() => {
             setShowEditModal(false);
