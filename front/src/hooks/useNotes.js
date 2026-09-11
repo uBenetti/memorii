@@ -36,6 +36,7 @@ export default function useNotes() {
             }
         );
 
+
         for (
             const itemId of deletedItemIds
         ) {
@@ -92,6 +93,7 @@ export default function useNotes() {
                         original.id ===
                         item.id
                 );
+
             if (!originalItem) {
                 continue;
             }
@@ -115,6 +117,7 @@ export default function useNotes() {
                 );
             }
         }
+
         for (
             const item of savedItems
         ) {
@@ -125,21 +128,24 @@ export default function useNotes() {
             );
         }
 
-        setNotes((currentNotes) => currentNotes.map((note)=>
-        note.id === noteId
-            ? {
-                ...note,
-                title,
-                items: savedItems
-            }
-            : note
-    ));
+        const updatedNotes =
+            await getNotes(token);
 
-    return {
-        ...originalNote,
-        title,
-        items: savedItems
-    };
+        const updatedNote =
+            updatedNotes.find(
+                (note) =>
+                    note.id === noteId
+            );
+
+        setNotes((currentNotes) =>
+            currentNotes.map((note) =>
+                note.id === noteId
+                    ? updatedNote
+                    : note
+            )
+        );
+
+        return updatedNote;
     };
 
     useEffect(() => {
