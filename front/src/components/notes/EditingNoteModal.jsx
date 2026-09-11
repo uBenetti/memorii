@@ -1,67 +1,49 @@
 import {
-    useEffect,
-    useState
+    useState,
+    useEffect
 } from "react";
 
-import ChecklistItem from "./ChecklistItem";
+import ChecklistEditor from "./ChecklistEditor";
 
 export default function EditNoteModal({
     isOpen,
     onClose,
     note,
     onUpdate,
-    onUpdateItem,
-    onDeleteItem,
-    onAddChecklistItem,
-    onReorderChecklistItems
+    onSaveChecklist
 }) {
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+    const [title, setTitle] =
+        useState(note?.title || "");
 
-    const [items, setItems] = useState([]);
+    const [content, setContent] =
+        useState(note?.content || "");
 
-    const [draggedItemId, setDraggedItemId] =
-        useState(null);
-
-    const [draggedItems, setDraggedItems] =
-        useState(null);
-
-    const [focusItemId, setFocusItemId] =
-        useState(null);
+    const [checklistData, setChecklistData] =
+        useState({
+            items: [],
+            deletedItemIds: []
+        });
 
     /*
-     * Carrega os dados da nota
-     * quando uma nota é aberta.
-     */
-    useEffect(() => {
-        if (!note) {
-            return;
-        }
-
-        setTitle(note.title || "");
-        setContent(note.content || "");
-
-        const orderedItems =
-            [...(note.items || [])]
-                .sort(
-                    (a, b) =>
-                        a.order - b.order
-                );
-
-        setItems(orderedItems);
-
-    }, [note]);
-
-    /*
-     * Fecha o modal com ESC.
+     * ESCAPE
+     *
+     * Este effect não copia props
+     * para estados.
+     *
+     * Ele apenas registra um listener
+     * externo do navegador.
      */
     useEffect(() => {
         if (!isOpen) {
             return;
         }
 
-        const handleKeyDown = (event) => {
-            if (event.key === "Escape") {
+        const handleKeyDown = (
+            event
+        ) => {
+            if (
+                event.key === "Escape"
+            ) {
                 onClose();
             }
         };
@@ -77,39 +59,63 @@ export default function EditNoteModal({
                 handleKeyDown
             );
         };
-
     }, [isOpen, onClose]);
 
     if (!isOpen || !note) {
         return null;
     }
 
-    /*
-     * Salva título/conteúdo da nota.
-     */
     const handleSubmit = async () => {
         try {
-            await onUpdate(note.id, {
-                title,
-                content,
-                note_type: note.note_type,
-                pinned: note.pinned
-            });
+
+            /*
+             * NOTA DE TEXTO
+             */
+            if (
+                note.note_type ===
+                "text"
+            ) {
+                await onUpdate(
+                    note.id,
+                    {
+                        title,
+                        content,
+                        note_type:
+                            note.note_type,
+                        pinned:
+                            note.pinned
+                    }
+                );
+            }
+
+            /*
+             * CHECKLIST
+             */
+            if (
+                note.note_type ===
+                "checklist"
+            ) {
+                await onSaveChecklist(
+                    note.id,
+                    title,
+                    checklistData.items,
+                    checklistData.deletedItemIds
+                );
+            }
 
             onClose();
 
         } catch (error) {
             console.error(
-                "Erro ao atualizar nota:",
+                "Erro ao salvar nota:",
                 error
             );
         }
     };
 
-    /*
-     * Clique fora do modal.
-     */
-    const handleOverlayClick = (event) => {
+    const handleOverlayClick = (
+        event
+    ) => {
         if (
             event.target ===
             event.currentTarget
@@ -118,273 +124,17 @@ export default function EditNoteModal({
         }
     };
 
-    /*
-     * Itens que serão exibidos.
-     */
-    const displayedItems =
-        draggedItems || items;
-
-    /*
-     * Inicia o arrasto de um item.
-     */
-    const handleItemDragStart = (
-        event,
-        itemId
+    const handleChecklistChange = (
+        data
     ) => {
-        event.stopPropagation();
-
-        setDraggedItemId(itemId);
-
-        setDraggedItems([...items]);
-
-        event.dataTransfer.effectAllowed =
-            "move";
-
-        event.dataTransfer.setData(
-            "checklistItemId",
-            itemId.toString()
-        );
-    };
-
-    /*
-     * Enquanto arrastamos,
-     * reorganiza visualmente os itens.
-     */
-    const handleItemDragOver = (
-        event,
-        targetItemId
-    ) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (
-            draggedItemId === null ||
-            draggedItemId === targetItemId
-        ) {
-            return;
-        }
-
-        setDraggedItems((currentItems) => {
-            if (!currentItems) {
-                return currentItems;
-            }
-
-            const draggedIndex =
-                currentItems.findIndex(
-                    (item) =>
-                        item.id ===
-                        draggedItemId
-                );
-
-            const targetIndex =
-                currentItems.findIndex(
-                    (item) =>
-                        item.id ===
-                        targetItemId
-                );
-
-            if (
-                draggedIndex === -1 ||
-                targetIndex === -1
-            ) {
-                return currentItems;
-            }
-
-            const newItems =
-                [...currentItems];
-
-            const [draggedItem] =
-                newItems.splice(
-                    draggedIndex,
-                    1
-                );
-
-            newItems.splice(
-                targetIndex,
-                0,
-                draggedItem
-            );
-
-            return newItems.map(
-                (item, index) => ({
-                    ...item,
-                    order: index
-                })
-            );
-        });
-    };
-
-    /*
-     * Finaliza o arrasto e salva
-     * a nova ordem no backend.
-     */
-    const handleItemDrop = async (
-        event
-    ) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (!draggedItems) {
-            setDraggedItemId(null);
-            return;
-        }
-
-        setItems(draggedItems);
-
-        await onReorderChecklistItems(
-            note.id,
-            draggedItems
-        );
-
-        setDraggedItemId(null);
-        setDraggedItems(null);
-    };
-
-    /*
-     * Cancela/encerra o arrasto.
-     */
-    const handleItemDragEnd = () => {
-        setDraggedItemId(null);
-        setDraggedItems(null);
-    };
-
-    /*
-     * Exclui item.
-     *
-     * Se o item foi excluído pelo
-     * Backspace, focamos no anterior.
-     */
-    const handleDeleteItem = async (
-        itemId,
-        focusPrevious = false
-    ) => {
-        const currentIndex =
-            displayedItems.findIndex(
-                (item) =>
-                    item.id === itemId
-            );
-
-        let previousItem = null;
-
-        if (
-            focusPrevious &&
-            currentIndex > 0
-        ) {
-            previousItem =
-                displayedItems[
-                    currentIndex - 1
-                ];
-        }
-
-        await onDeleteItem(itemId);
-
-        const updatedItems =
-            displayedItems.filter(
-                (item) =>
-                    item.id !== itemId
-            );
-
-        setItems(
-            updatedItems.map(
-                (item, index) => ({
-                    ...item,
-                    order: index
-                })
-            )
-        );
-
-        setDraggedItems(null);
-        setDraggedItemId(null);
-
-        if (previousItem) {
-            setFocusItemId(
-                previousItem.id
-            );
-        }
-    };
-
-    /*
-     * Cria um novo item abaixo
-     * do item atual.
-     */
-    const handleCreateItemBelow =
-        async (currentItem) => {
-
-        const currentIndex =
-            displayedItems.findIndex(
-                (item) =>
-                    item.id ===
-                    currentItem.id
-            );
-
-        const newItem =
-            await onAddChecklistItem(
-                note.id,
-                currentIndex + 1
-            );
-
-        if (!newItem) {
-            return;
-        }
-
-        const updatedItems =
-            [...displayedItems];
-
-        updatedItems.splice(
-            currentIndex + 1,
-            0,
-            newItem
-        );
-
-        setItems(
-            updatedItems.map(
-                (item, index) => ({
-                    ...item,
-                    order: index
-                })
-            )
-        );
-
-        setFocusItemId(
-            newItem.id
-        );
-    };
-
-    /*
-     * Adiciona item pelo botão +.
-     */
-    const handleAddItem = async () => {
-        const newItem =
-            await onAddChecklistItem(
-                note.id
-            );
-
-        if (!newItem) {
-            return;
-        }
-
-        const updatedItems = [
-            ...displayedItems,
-            newItem
-        ];
-
-        setItems(
-            updatedItems.map(
-                (item, index) => ({
-                    ...item,
-                    order: index
-                })
-            )
-        );
-
-        setFocusItemId(
-            newItem.id
-        );
+        setChecklistData(data);
     };
 
     return (
         <div
-            onClick={handleOverlayClick}
+            onClick={
+                handleOverlayClick
+            }
             style={{
                 position: "fixed",
                 inset: 0,
@@ -405,7 +155,6 @@ export default function EditNoteModal({
                 onClick={(event) =>
                     event.stopPropagation()
                 }
-
                 style={{
                     width: "600px",
                     maxWidth: "90%",
@@ -425,6 +174,7 @@ export default function EditNoteModal({
                     display: "flex",
                     flexDirection:
                         "column",
+
                     gap: "16px",
 
                     overflow:
@@ -433,6 +183,7 @@ export default function EditNoteModal({
             >
 
                 {/* CABEÇALHO */}
+
                 <div
                     style={{
                         display: "flex",
@@ -452,10 +203,11 @@ export default function EditNoteModal({
                     </h2>
 
                     <button
-                        onClick={onClose}
+                        onClick={
+                            onClose
+                        }
                         title="Fechar"
                         aria-label="Fechar"
-
                         style={{
                             border: "none",
                             background:
@@ -472,17 +224,16 @@ export default function EditNoteModal({
                 </div>
 
                 {/* TÍTULO */}
+
                 <input
                     type="text"
                     placeholder="Título"
                     value={title}
-
                     onChange={(event) =>
                         setTitle(
                             event.target.value
                         )
                     }
-
                     style={{
                         fontSize:
                             "20px",
@@ -496,19 +247,18 @@ export default function EditNoteModal({
                 />
 
                 {/* NOTA DE TEXTO */}
+
                 {note.note_type ===
                     "text" && (
 
                     <textarea
                         placeholder="Conteúdo"
                         value={content}
-
                         onChange={(event) =>
                             setContent(
                                 event.target.value
                             )
                         }
-
                         style={{
                             minHeight:
                                 "250px",
@@ -526,139 +276,24 @@ export default function EditNoteModal({
                 )}
 
                 {/* CHECKLIST */}
+
                 {note.note_type ===
                     "checklist" && (
 
-                    <div
-                        style={{
-                            overflowY:
-                                "auto",
-                            minHeight:
-                                "150px",
-                            maxHeight:
-                                "50vh"
-                        }}
-                    >
-
-                        {displayedItems.length ===
-                            0 && (
-
-                            <p
-                                style={{
-                                    color:
-                                        "#777"
-                                }}
-                            >
-                                Nenhum item ainda.
-                            </p>
-
-                        )}
-
-                        {displayedItems.map(
-                            (item) => (
-
-                            <ChecklistItem
-                                key={
-                                    item.id
-                                }
-
-                                item={item}
-
-                                onUpdate={
-                                    async (
-                                        itemId,
-                                        itemData
-                                    ) => {
-
-                                        const updatedItem =
-                                            await onUpdateItem(
-                                                itemId,
-                                                itemData
-                                            );
-
-                                        setItems(
-                                            (
-                                                currentItems
-                                            ) =>
-                                                currentItems.map(
-                                                    (
-                                                        currentItem
-                                                    ) =>
-                                                        currentItem.id ===
-                                                        itemId
-                                                            ? updatedItem
-                                                            : currentItem
-                                                )
-                                        );
-
-                                        return updatedItem;
-                                    }
-                                }
-
-                                onDelete={
-                                    handleDeleteItem
-                                }
-
-                                onCreateBelow={
-                                    handleCreateItemBelow
-                                }
-
-                                onDragStart={
-                                    handleItemDragStart
-                                }
-
-                                onDragOver={
-                                    handleItemDragOver
-                                }
-
-                                onDrop={
-                                    handleItemDrop
-                                }
-
-                                onDragEnd={
-                                    handleItemDragEnd
-                                }
-
-                                isDragging={
-                                    draggedItemId ===
-                                    item.id
-                                }
-
-                                autoFocus={
-                                    focusItemId ===
-                                    item.id
-                                }
-                            />
-
-                        ))}
-
-                        {/* BOTÃO + */}
-                        <button
-                            onClick={
-                                handleAddItem
-                            }
-
-                            style={{
-                                marginTop:
-                                    "8px",
-                                border:
-                                    "none",
-                                background:
-                                    "transparent",
-                                cursor:
-                                    "pointer",
-                                fontSize:
-                                    "24px"
-                            }}
-                        >
-                            +
-                        </button>
-
-                    </div>
+                    <ChecklistEditor
+                        noteId={note.id}
+                        initialItems={
+                            note.items
+                        }
+                        onChange={
+                            handleChecklistChange
+                        }
+                    />
 
                 )}
 
                 {/* BOTÕES */}
+
                 <div
                     style={{
                         display: "flex",
@@ -669,7 +304,9 @@ export default function EditNoteModal({
                 >
 
                     <button
-                        onClick={onClose}
+                        onClick={
+                            onClose
+                        }
                     >
                         Cancelar
                     </button>

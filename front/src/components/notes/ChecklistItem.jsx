@@ -1,4 +1,8 @@
-import { useState, useLayoutEffect, useRef } from "react";
+import {
+    useState,
+    useLayoutEffect,
+    useRef
+} from "react";
 
 export default function ChecklistItem({
     item,
@@ -12,99 +16,81 @@ export default function ChecklistItem({
     isDragging,
     autoFocus
 }) {
-    const [text, setText] = useState(item.text);
-    const [isSaving, setIsSaving] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
+    const [text, setText] =
+        useState(item.text || "");
+
+    const [isHovered, setIsHovered] =
+        useState(false);
 
     const inputRef = useRef(null);
 
     useLayoutEffect(() => {
-        if (autoFocus && inputRef.current){
+        if (
+            autoFocus &&
+            inputRef.current
+        ) {
             inputRef.current.focus();
         }
     }, [autoFocus]);
 
-    const handleToggle = async () => {
-        try {
-            setIsSaving(true);
-
-            await onUpdate(item.id, {
-                completed: !item.completed
-            });
-
-        } catch (error) {
-            console.error(
-                "Erro ao atualizar checklist:",
-                error
-            );
-        } finally {
-            setIsSaving(false);
-        }
+    const handleToggle = () => {
+        onUpdate(item.id, {
+            completed: !item.completed
+        });
     };
 
-    const handleSave = async () => {
+    const handleSave = () => {
         if (text === item.text) {
             return;
         }
 
-        try {
-            setIsSaving(true);
-
-            await onUpdate(item.id, {
-                text: text
-            });
-
-        } catch (error) {
-            console.error(
-                "Erro ao salvar texto:",
-                error
-            );
-
-            setText(item.text);
-
-        } finally {
-            setIsSaving(false);
-        }
+        onUpdate(item.id, {
+            text
+        });
     };
 
-    const handleKeyDown = async (event) => {
-        if(event.key == "Backspace" && text === ""){
+    const handleKeyDown = (event) => {
+
+        /*
+         * BACKSPACE
+         */
+        if (
+            event.key === "Backspace" &&
+            text === ""
+        ) {
             event.preventDefault();
 
-            await onDelete(item.id, true);
+            onDelete(
+                item.id,
+                true
+            );
 
             return;
         }
 
+        /*
+         * ENTER
+         */
         if (event.key === "Enter") {
             event.preventDefault();
 
             if (text !== item.text) {
-                try {
-                    setIsSaving(true);
-
-                    await onUpdate(item.id, {
-                        text: text
-                    });
-
-                } catch (error) {
-                    console.error(
-                        "Erro ao salvar texto:",
-                        error
-                    );
-
-                    return;
-
-                } finally {
-                    setIsSaving(false);
-                }
+                onUpdate(item.id, {
+                    text
+                });
             }
 
-            await onCreateBelow(item);
+            onCreateBelow(item);
+
+            return;
         }
 
+        /*
+         * ESCAPE
+         */
         if (event.key === "Escape") {
-            setText(item.text);
+            setText(item.text || "");
+
             event.currentTarget.blur();
         }
     };
@@ -124,24 +110,34 @@ export default function ChecklistItem({
                 event.preventDefault();
                 event.stopPropagation();
 
-                onDragOver(event, item.id);
+                onDragOver(
+                    event,
+                    item.id
+                );
             }}
             onDrop={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                onDrop(event, item.id);
+                onDrop(
+                    event,
+                    item.id
+                );
             }}
             style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                opacity: isDragging ? 0.2 : 1,
+                opacity:
+                    isDragging
+                        ? 0.2
+                        : 1,
                 minHeight: "32px"
             }}
         >
 
-            {/* BOTÃO PARA ARRASTAR */}
+            {/* ARRASTAR */}
+
             <button
                 draggable
                 onDragStart={(event) => {
@@ -161,13 +157,16 @@ export default function ChecklistItem({
                 aria-label="Mover item"
                 style={{
                     border: "none",
-                    background: "transparent",
+                    background:
+                        "transparent",
                     cursor: "grab",
                     fontSize: "18px",
                     padding: "0 4px",
 
                     opacity:
-                        showActions ? 1 : 0,
+                        showActions
+                            ? 1
+                            : 0,
 
                     pointerEvents:
                         showActions
@@ -182,29 +181,36 @@ export default function ChecklistItem({
             </button>
 
             {/* CHECKBOX */}
+
             <input
                 type="checkbox"
                 checked={item.completed}
-                onChange={handleToggle}
-                disabled={isSaving}
+                onChange={
+                    handleToggle
+                }
             />
 
             {/* TEXTO */}
+
             <input
                 ref={inputRef}
                 value={text}
                 placeholder=""
                 onChange={(event) => {
-                    setText(event.target.value);
+                    setText(
+                        event.target.value
+                    );
                 }}
                 onBlur={handleSave}
-                onKeyDown={handleKeyDown}
-                disabled={isSaving}
+                onKeyDown={
+                    handleKeyDown
+                }
                 style={{
                     flex: 1,
                     border: "none",
                     outline: "none",
-                    background: "transparent",
+                    background:
+                        "transparent",
                     padding: 0,
                     margin: 0,
                     font: "inherit",
@@ -216,21 +222,28 @@ export default function ChecklistItem({
                 }}
             />
 
-            {/* BOTÃO DE EXCLUIR */}
+            {/* EXCLUIR */}
+
             {onDelete && (
                 <button
                     onClick={() =>
-                        onDelete(item.id)
+                        onDelete(
+                            item.id
+                        )
                     }
                     title="Excluir item"
                     style={{
                         border: "none",
                         outline: "none",
-                        background: "transparent",
-                        cursor: "pointer",
+                        background:
+                            "transparent",
+                        cursor:
+                            "pointer",
 
                         opacity:
-                            showActions ? 1 : 0,
+                            showActions
+                                ? 1
+                                : 0,
 
                         pointerEvents:
                             showActions

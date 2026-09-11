@@ -71,14 +71,16 @@ export const updateChecklistItem = async (
 export const createChecklistItem = async (
     token,
     noteId,
-    order
+    order,
+    text = "",
+    completed = false
 ) => {
     const response = await api.post(
         "checklist-items/",
         {
             note: noteId,
-            text: "",
-            completed: false,
+            text,
+            completed,
             order
         },
         {

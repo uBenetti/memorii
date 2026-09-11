@@ -17,6 +17,79 @@ export default function useNotes() {
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const saveChecklistChanges = async(
+        noteId,
+        title,
+        content,
+        items,
+        deletedItemId
+    ) => {
+        const token = localStorage.getItem("access");
+
+        await updateNote(token, noteId,{
+            title, content, note_type: "checklist"
+        });
+
+        for(
+            const itemId of deletedItemId
+        ){
+            await deleteChecklistItem(
+                token, itemId
+            );
+        }
+
+        for (
+            const item of items
+        ){
+            if (item.isNew){
+                const createdItem = await createChecklistItem(
+                    token,
+                    noteId,
+                    item.order,
+                    item.text,
+                    item.completed
+                );
+
+                item.id=createdItem.id;
+
+                item.isNew=false;
+            }
+        }
+
+        for(const item of items){
+            if(item.isNew){
+                continue;
+            }
+
+            const originalItem = notes.find((note) => note.id ===noteId)
+                ?.items?.find((original) => original.id === item.id);
+            
+            if (!originalItem) {
+                continue;
+            }
+
+            const changed = originalItem.text !== item.text ||
+                originalItem.completed !== item.completed;
+
+            if (changed) {
+                await updateChecklistItem(token, item.id, {
+                    text: item.text,
+                    completed: item.completed
+                });
+            }
+        }
+
+        for (const item of items) {
+            await reorderChecklistItem(token, item.id, item.order);
+        }
+
+        const updatedNotes= await getNotes(token);
+
+        setNotes(updatedNotes);
+
+        return updatedNotes.find((note) => note.id === noteId);
+    };
+
     useEffect(() => {
         const token = localStorage.getItem("access");
 
@@ -368,6 +441,7 @@ const removeChecklistItem = async (itemId) => {
         removeChecklistItem,
         toggleNotePin,
         reorderExistingNote,
-        reorderExistingChecklistItems
+        reorderExistingChecklistItems,
+        saveChecklistChanges
     };
 }
