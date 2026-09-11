@@ -12,6 +12,8 @@ export default function EditNoteModal({
     onUpdate,
     onSaveChecklist
 }) {
+    const [isSaving, setIsSaving] = useState(false);
+
     const [title, setTitle] =
         useState(note?.title || "");
 
@@ -24,15 +26,6 @@ export default function EditNoteModal({
             deletedItemIds: []
         });
 
-    /*
-     * ESCAPE
-     *
-     * Este effect não copia props
-     * para estados.
-     *
-     * Ele apenas registra um listener
-     * externo do navegador.
-     */
     useEffect(() => {
         if (!isOpen) {
             return;
@@ -66,41 +59,27 @@ export default function EditNoteModal({
     }
 
     const handleSubmit = async () => {
+        if (isSaving) {
+            return;
+        }
+
         try {
+            setIsSaving(true);
 
-            /*
-             * NOTA DE TEXTO
-             */
-            if (
-                note.note_type ===
-                "text"
-            ) {
-                await onUpdate(
-                    note.id,
-                    {
-                        title,
-                        content,
-                        note_type:
-                            note.note_type,
-                        pinned:
-                            note.pinned
-                    }
-                );
-            }
-
-            /*
-             * CHECKLIST
-             */
-            if (
-                note.note_type ===
-                "checklist"
-            ) {
+            if (note.note_type === "checklist") {
                 await onSaveChecklist(
                     note.id,
                     title,
                     checklistData.items,
                     checklistData.deletedItemIds
                 );
+            } else {
+                await onUpdate(note.id, {
+                    title,
+                    content,
+                    note_type: note.note_type,
+                    pinned: note.pinned
+                });
             }
 
             onClose();
@@ -110,6 +89,9 @@ export default function EditNoteModal({
                 "Erro ao salvar nota:",
                 error
             );
+
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -182,8 +164,6 @@ export default function EditNoteModal({
                 }}
             >
 
-                {/* CABEÇALHO */}
-
                 <div
                     style={{
                         display: "flex",
@@ -223,8 +203,6 @@ export default function EditNoteModal({
 
                 </div>
 
-                {/* TÍTULO */}
-
                 <input
                     type="text"
                     placeholder="Título"
@@ -246,7 +224,6 @@ export default function EditNoteModal({
                     }}
                 />
 
-                {/* NOTA DE TEXTO */}
 
                 {note.note_type ===
                     "text" && (
@@ -275,7 +252,6 @@ export default function EditNoteModal({
 
                 )}
 
-                {/* CHECKLIST */}
 
                 {note.note_type ===
                     "checklist" && (
@@ -292,7 +268,6 @@ export default function EditNoteModal({
 
                 )}
 
-                {/* BOTÕES */}
 
                 <div
                     style={{
@@ -312,11 +287,13 @@ export default function EditNoteModal({
                     </button>
 
                     <button
-                        onClick={
-                            handleSubmit
-                        }
+                        onClick={handleSubmit}
+                        disabled={isSaving}
                     >
-                        Salvar Alterações
+                        {isSaving
+                            ? "Salvando..."
+                            : "Salvar Alterações"
+                        }
                     </button>
 
                 </div>
